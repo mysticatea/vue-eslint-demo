@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js ESLint Demo</title>
+    <style>
+        html,
+        body,
+        #MainContent,
+        #SplashScreen {
+            contain: strict;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #MainContent,
+        #SplashScreen {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #MainContent.shown,
+        #SplashScreen.shown {
+            opacity: 1;
+        }
+
+        #SplashScreen {
+            position: fixed;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+        }
+
+        #SplashScreen .text {
+            font: italic 24px "Times New Roman";
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #SplashScreen.shown .text {
+            opacity: 1;
+        }
+
+        #SplashScreen .center {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #SplashScreen .load-icon {
+            width: 200px;
+            height: 200px;
+        }
+
+        #SplashScreen .load-icon div {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+            animation: SplashScreen__spin 2s linear infinite;
+        }
+
+        #SplashScreen.shown .load-icon div {
+            opacity: 1;
+        }
+
+        #SplashScreen .load-icon div:nth-child(1) {
+            height: 100%;
+            width: 100%;
+            border-top: solid 8px rgba(33, 150, 243, 0.40);
+            animation-duration: 1.7s;
+        }
+
+        #SplashScreen .load-icon div:nth-child(2) {
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            border-top: solid 8px rgba(33, 150, 243, 0.60);
+            animation-duration: 1.3s;
+        }
+
+        #SplashScreen .load-icon div:nth-child(3) {
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-top: solid 8px rgba(33, 150, 243, 0.80);
+            animation-duration: 1.1s;
+        }
+
+        @keyframes SplashScreen__spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(210deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="MainContent">
+        <div id="main"></div>
+    </div>
+    <div id="SplashScreen">
+        <div class="load-icon center">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="text center">
+             Now loading...
+        </div>
+    </div>
+    <script>
+        (function (SplashScreen, MainContent) {
+            // Show splash screen.
+            setTimeout(function () {
+                if (SplashScreen && MainContent) {
+                    MainContent.className = ""
+                    SplashScreen.className = "shown"
+                }
+            }, 0)
+
+            // Define show method.
+            MainContent.show = function() {
+                MainContent.className = "shown"
+                SplashScreen.className = ""
+                setTimeout(function () {
+                    this.parentNode.removeChild(this)
+                }.bind(SplashScreen), 1000)
+
+                SplashScreen = undefined
+                MainContent = undefined
+            }
+        })(window.SplashScreen, window.MainContent)
+    </script>
+    <script src="index.js" async></script>
+</body>
+
+</html>
