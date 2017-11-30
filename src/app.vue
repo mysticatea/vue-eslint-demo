@@ -216,6 +216,7 @@ a:hover {
 
 .app__footer {
     display: flex;
+    flex-shrink: 0;
     border-top: 1px solid #CCC;
 }
 .app__footer-message {
