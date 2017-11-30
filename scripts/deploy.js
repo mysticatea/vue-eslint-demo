@@ -9,7 +9,7 @@ main()
  * @returns {void}
  */
 function main() {
-    exec("npm run build")
+    exec("npm run -s build")
     exec("git checkout gh-pages")
 
     if (String(sh.cat("dist/versions.json")) === String(sh.cat("versions.json"))) {
@@ -19,7 +19,7 @@ function main() {
     }
 
     rm("-rf", "vs", "index.*")
-    cp("dist/*", ".")
+    cp("-r", "dist/*", ".")
     exec("git add -A")
     exec("git commit -m \"Update: website\"")
     exec("git push")

@@ -36,17 +36,17 @@
     "webpack-dev-server": "^2.9.5"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production run-s clean build:*",
+    "build": "cross-env NODE_ENV=production run-s clean build:* -s",
     "build:html": "appcache-manifest-fixer src/index.html -o dist/index.html",
     "build:js": "webpack --progress --hide-modules",
     "build:monaco": "cpx node_modules/monaco-editor/min/vs/**/* dist/vs",
-    "build:manifest": "appcache-manifest \"dist/**/*.{css,html,js,svg}\" --prefix /vue-eslint-demo --network-star -o dist/index.appcache",
+    "build:manifest": "appcache-manifest \"dist/**/*.{css,html,js,svg}\" --prefix /vue-eslint-demo --network-star -o dist/index.appcache && node scripts/tweak-manifest",
     "build:versions": "node scripts/make-versions",
     "clean": "rimraf dist",
     "deploy": "node scripts/deploy",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags && npm run deploy",
-    "watch": "cross-env NODE_ENV=development run-p watch:*",
+    "watch": "cross-env NODE_ENV=development run-p watch:* -s",
     "watch:html": "cpx src/*.html dist --watch",
     "watch:js": "webpack-dev-server --open --hot",
     "watch:monaco": "cpx node_modules/monaco-editor/min/vs/**/* dist/vs --watch"
