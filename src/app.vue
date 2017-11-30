@@ -36,6 +36,7 @@
             </div>
         </div>
         <div class="app__footer">
+            <div class="app__footer-message"/>
             <div
                 class="app__version-item"
                 v-for="(version, name) in versions"
@@ -65,7 +66,7 @@ export default {
     },
 
     data() {
-        return deserializeState(location.hash.slice(1))
+        return deserializeState(window.location.hash.slice(1))
     },
 
     computed: {
@@ -129,7 +130,7 @@ export default {
         },
 
         onEditorInitialize() {
-            this.$emit("initialize")
+            window.MainContent.show()
         },
 
         onConfigChange() {
@@ -137,16 +138,15 @@ export default {
         },
 
         onUrlHashChange() {
-            const newSerializedState = location.hash.slice(1)
+            const newSerializedState = window.location.hash.slice(1)
             const oldSerializedState = serializeState(this.$data)
-
             if (newSerializedState !== oldSerializedState) {
                 Object.assign(this.$data, deserializeState(newSerializedState))
             }
         },
 
         applyUrlHash() {
-            location.hash = `#${serializeState(this.$data)}`
+            window.location.hash = `#${serializeState(this.$data)}`
         },
     },
 }
@@ -216,8 +216,11 @@ a:hover {
 
 .app__footer {
     display: flex;
-    justify-content: flex-end;
     border-top: 1px solid #CCC;
+}
+.app__footer-message {
+    flex-grow: 1;
+    color: #B71C1C;
 }
 .app__version-item {
     margin-right: 8px;
