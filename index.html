@@ -143,9 +143,29 @@
                 SplashScreen = undefined
                 MainContent = undefined
             }
-        })(window.SplashScreen, window.MainContent)
+        })(SplashScreen, MainContent)
+
+        // Check update.
+        window.addEventListener("load", function() {
+            applicationCache.addEventListener("updateready", function() {
+                if (applicationCache.status == applicationCache.UPDATEREADY) {
+                    applicationCache.swapCache()
+
+                    var footer = document.querySelector(".app__footer-message")
+                    if (footer) {
+                        footer.textContent = "Please reload because a new version of this site is available."
+                    }
+                }
+            })
+        })
+
+        // Show loading error.
+        function onLoadError() {
+            MainContent.innerHTML = "Failed to load. Please ensure you are using the browser which supports ES2015."
+            MainContent.show()
+        }
     </script>
-    <script src="index.js" async></script>
+    <script src="index.js" async onerror="onLoadError"></script>
 </body>
 
 </html>
