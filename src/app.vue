@@ -174,18 +174,16 @@ a:hover {
     border-bottom: 1px solid #4CAF50;
     font-weight: bold;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    z-index: 1;
 }
 
 .app__body {
     display: flex;
-    height: 100%;
     flex-grow: 1;
+    min-height: 0;
 }
 
 .app__sidebar {
     width: calc(25% - 1px);
-    height: 100%;
     border-right: 1px solid #CCC;
 }
 
