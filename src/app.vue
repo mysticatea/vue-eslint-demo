@@ -37,7 +37,7 @@
                 v-for="(v, name) in versions"
                 :key="name"
             >
-                <a :href="'https://github.com/' + v.repo">{{ name }}</a>
+                <a :href="'https://github.com/' + v.repo" target="_blank">{{ name }}</a>
                 v{{ v.version }}
             </div>
         </div>
