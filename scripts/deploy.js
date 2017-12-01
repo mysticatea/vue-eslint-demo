@@ -1,6 +1,7 @@
 "use strict"
 
 const sh = require("shelljs")
+const version = require("../package.json").version
 
 main()
 
@@ -9,21 +10,19 @@ main()
  * @returns {void}
  */
 function main() {
-    exec("npm run -s build")
+    exec(`git checkout ${version}`)
+    exec("npm run build")
     exec("git checkout gh-pages")
 
-    if (String(sh.cat("dist/versions.json")) === String(sh.cat("versions.json"))) {
-        sh.echo("No update.")
-        exec("git checkout -")
-        return
+    if (String(sh.cat("dist/versions.json")) !== String(sh.cat("versions.json"))) {
+        rm("-rf", "vs", "index.*")
+        cp("-r", "dist/*", ".")
+        exec("git add -A")
+        exec("git commit -m \"Update: website\"")
+        exec("git push")
     }
 
-    rm("-rf", "vs", "index.*")
-    cp("-r", "dist/*", ".")
-    exec("git add -A")
-    exec("git commit -m \"Update: website\"")
-    exec("git push")
-    exec("git checkout -")
+    exec("git checkout master")
 }
 
 /**

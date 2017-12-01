@@ -37,7 +37,7 @@
     "webpack-dev-server": "^2.9.5"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production run-s clean build:* -s",
+    "build": "cross-env NODE_ENV=production run-s clean build:*",
     "build:html": "appcache-manifest-fixer src/index.html -o dist/index.html",
     "build:js": "webpack --progress --hide-modules",
     "build:monaco": "node scripts/copy-monaco",
@@ -45,7 +45,8 @@
     "build:versions": "node scripts/make-versions",
     "clean": "rimraf dist",
     "deploy": "node scripts/deploy",
-    "preversion": "npm run build",
+    "lint": "eslint .",
+    "preversion": "run-s lint build -s",
     "postversion": "git push && git push --tags && npm run deploy",
     "update-deps": "npm install eslint@latest eslint-plugin-vue@next vue-eslint-parser@experimental",
     "watch": "cross-env NODE_ENV=development run-p watch:* -s",
