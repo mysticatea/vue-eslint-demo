@@ -1,10 +1,5 @@
 <template functional>
-    <i
-        class="material-icons"
-        :title="title"
-    >
-        {{ props.kind }}
-    </i>
+    <i class="material-icons" :title="title">{{ props.kind }}</i>
 </template>
 
 <script>
@@ -24,7 +19,7 @@ export default {
 </script>
 
 <style>
-@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+@import url(../node_modules/material-design-icons/iconfont/material-icons.css);
 
 .material-icons {
     vertical-align: middle;

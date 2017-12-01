@@ -70,10 +70,12 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif|svg|eot|ijmap|ttf|woff2?)$/,
                 loader: "file-loader",
                 options: {
-                    name: "[name].[ext]?[hash]",
+                    name: "[name].[ext]",
+                    outputPath: "assets/",
+                    publicPath: "./",
                 },
             },
             // Replace `./src/versions.js` with the current versions.
