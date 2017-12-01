@@ -272,6 +272,7 @@ export default {
 
             // Set change event.
             original.onDidChangeContent(() => {
+                updateValue(rightEditor, original.getValue())
                 this.invalidate()
             })
 
