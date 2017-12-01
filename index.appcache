@@ -1,4 +1,8 @@
 CACHE MANIFEST
+/vue-eslint-demo/assets/MaterialIcons-Regular.eot
+/vue-eslint-demo/assets/MaterialIcons-Regular.ttf
+/vue-eslint-demo/assets/MaterialIcons-Regular.woff
+/vue-eslint-demo/assets/MaterialIcons-Regular.woff2
 /vue-eslint-demo/index.html
 /vue-eslint-demo/index.js
 /vue-eslint-demo/vs/base/worker/workerMain.js
@@ -17,6 +21,6 @@ CACHE MANIFEST
 /vue-eslint-demo/vs/language/typescript/src/mode.js
 /vue-eslint-demo/vs/language/typescript/src/worker.js
 /vue-eslint-demo/vs/loader.js
-#e05f4d82c6b689647bcc71c2178abaab
+#f4ae1bf33f4b4027377bfb960010d30e
 NETWORK:
 *
