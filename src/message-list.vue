@@ -21,6 +21,7 @@
 
 <script>
 import MdIcon from "./md-icon.vue"
+import { getRuleUrl } from "./eslint.js"
 
 export default {
     name: "MessageList",
@@ -42,14 +43,7 @@ export default {
             return "\u2007".repeat(Math.max(1, 8 - width))
         },
 
-        url(ruleId) {
-            if (ruleId == null) {
-                return ""
-            }
-            return ruleId.startsWith("vue/")
-                ? `https://github.com/vuejs/eslint-plugin-vue/tree/master/docs/rules/${ruleId.replace("vue/", "")}.md`
-                : `https://eslint.org/docs/rules/${ruleId}`
-        },
+        url: getRuleUrl,
     },
 }
 </script>

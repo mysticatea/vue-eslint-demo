@@ -1,47 +1,50 @@
 <template>
     <li class="rule-select-category__root">
         <label class="rule-select-category__header">
-            <input
-                type="checkbox"
-                v-model="shown"
-                style="display:none"
-            >
+            <input type="checkbox" v-model="shown" style="display:none">
             <md-icon :kind="shown ? 'expand_more' : 'chevron_right'"/>
             {{ category.name }}
             <span class="rule-select-category__count">
                 ({{ countChecked }} / {{ countAll }})
             </span>
         </label>
-        <ul
-            class="rule-select-category__rules"
-            v-if="shown"
-        >
+        <ul v-if="shown" class="rule-select-category__rules">
             <li>
                 <label class="rule-select-category__rule">
-                    <input
-                        type="checkbox"
-                        v-model="allRules"
-                        :true-value="2"
-                        :false-value="0"
-                        @change="emitChangeEvent"
-                    >
-                    (all rules)
+                    <div class="rule-select-category__rule-checkbox">
+                        <input
+                            type="checkbox"
+                            v-model="allRules"
+                            :true-value="2"
+                            :false-value="0"
+                            @change="emitChangeEvent"
+                        >
+                    </div>
+                    <div class="rule-select-category__rule-name">
+                        (all rules)
+                    </div>
                 </label>
             </li>
-            <li
-                v-for="rule of category.rules"
+            <li v-for="rule of category.rules"
                 :key="rule.name"
                 :title="rule.description"
             >
                 <label class="rule-select-category__rule">
-                    <input
-                        type="checkbox"
-                        v-model="config.rules[rule.name]"
-                        :true-value="2"
-                        :false-value="0"
-                        @change="emitChangeEvent"
-                    >
-                    {{ stripPrefix(rule.name) }}
+                    <div class="rule-select-category__rule-checkbox">
+                        <input
+                            type="checkbox"
+                            v-model="config.rules[rule.name]"
+                            :true-value="2"
+                            :false-value="0"
+                            @change="emitChangeEvent"
+                        >
+                    </div>
+                    <div class="rule-select-category__rule-name">
+                        {{ stripPrefix(rule.name) }}
+                    </div>
+                    <a class="rule-select-category__rule-link" :href="url(rule.name)" target="_blank">
+                        <md-icon kind="launch" title="Open document"/>
+                    </a>
                 </label>
             </li>
         </ul>
@@ -50,6 +53,7 @@
 
 <script>
 import MdIcon from "./md-icon.vue"
+import { getRuleUrl } from "./eslint.js"
 
 export default {
     name: "RuleSelectCategory",
@@ -105,6 +109,8 @@ export default {
         emitChangeEvent() {
             this.$emit("change")
         },
+
+        url: getRuleUrl,
     },
 }
 </script>
@@ -136,7 +142,8 @@ export default {
 }
 
 .rule-select-category__rule {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 4px;
     padding-left: 16px;
     border-bottom: 1px solid #E8F5E9;
@@ -145,8 +152,17 @@ li:last-child > .rule-select-category__rule {
     border-bottom: 1px solid #4CAF50;
 }
 
-.rule-select-category__rule > input[type=checkbox] {
-    vertical-align: middle;
+.rule-select-category__rule-checkbox {
+    flex-shrink: 0;
+    padding-top: 4px; /* align to the rule name */
+    padding-right: 4px;
+}
+.rule-select-category__rule-name {
+    flex-grow: 1;
+}
+.rule-select-category__rule-link {
+    display: block;
+    flex-shrink: 0;
 }
 
 .rule-select-category__header:hover,
