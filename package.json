@@ -38,7 +38,6 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production run-s clean build:* -s",
-    "build:update-deps": "npm install eslint@latest eslint-plugin-vue@next vue-eslint-parser@experimental",
     "build:html": "appcache-manifest-fixer src/index.html -o dist/index.html",
     "build:js": "webpack --progress --hide-modules",
     "build:monaco": "node scripts/copy-monaco",
@@ -48,6 +47,7 @@
     "deploy": "node scripts/deploy",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags && npm run deploy",
+    "update-deps": "npm install eslint@latest eslint-plugin-vue@next vue-eslint-parser@experimental",
     "watch": "cross-env NODE_ENV=development run-p watch:* -s",
     "watch:html": "cpx src/index.html dist --watch",
     "watch:js": "webpack-dev-server --open --hot",

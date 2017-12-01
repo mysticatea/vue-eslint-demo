@@ -34,4 +34,5 @@ Please use GitHub's Issues/PRs.
 - `npm run build` builds the app into `/dist` directory.
 - `npm run clean` removes `/dist` directory.
 - `npm run deploy` builds the app, then updates `gh-pages` branch, then pushes it to GitHub.
+- `npm run update-deps` installs the latest `eslint`, `eslint-plugin-vue`, and `vue-eslint-parser`.
 - `npm run watch` runs the app with `webpack-dev-server`.
