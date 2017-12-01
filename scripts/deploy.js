@@ -1,4 +1,4 @@
-/*eslint-env node */
+"use strict"
 
 const sh = require("shelljs")
 

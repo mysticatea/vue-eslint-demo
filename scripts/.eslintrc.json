@@ -1,0 +1,10 @@
+{
+    "root": true,
+    "extends": [
+        "mysticatea",
+        "mysticatea/node"
+    ],
+    "rules": {
+        "no-console": "off"
+    }
+}

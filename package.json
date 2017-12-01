@@ -39,17 +39,17 @@
     "build": "cross-env NODE_ENV=production run-s clean build:* -s",
     "build:html": "appcache-manifest-fixer src/index.html -o dist/index.html",
     "build:js": "webpack --progress --hide-modules",
-    "build:monaco": "cpx node_modules/monaco-editor/min/vs/**/* dist/vs",
-    "build:manifest": "appcache-manifest \"dist/**/*.{css,html,js,svg}\" --prefix /vue-eslint-demo --network-star -o dist/index.appcache && node scripts/tweak-manifest",
+    "build:monaco": "node scripts/copy-monaco",
+    "build:manifest": "appcache-manifest \"dist/**/*.{css,html,js,svg}\" --prefix /vue-eslint-demo --network-star -o dist/index.appcache",
     "build:versions": "node scripts/make-versions",
     "clean": "rimraf dist",
     "deploy": "node scripts/deploy",
     "preversion": "npm run build",
     "postversion": "git push && git push --tags && npm run deploy",
     "watch": "cross-env NODE_ENV=development run-p watch:* -s",
-    "watch:html": "cpx src/*.html dist --watch",
+    "watch:html": "cpx src/index.html dist --watch",
     "watch:js": "webpack-dev-server --open --hot",
-    "watch:monaco": "cpx node_modules/monaco-editor/min/vs/**/* dist/vs --watch"
+    "watch:monaco": "node scripts/copy-monaco --watch"
   },
   "repository": {
     "type": "git",
