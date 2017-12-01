@@ -186,7 +186,7 @@ export default {
             if (editor != null && editor.getModifiedEditor != null) {
                 return editor.getModifiedEditor()
             }
-            return editor
+            return null
         },
     },
 
@@ -241,15 +241,16 @@ export default {
         },
 
         createEditor() {
-            const editor = monaco.editor.create(
-                this.$el,
-                Object.assign({ value: this.code, language: "html" }, EDITOR_OPTS)
-            )
+            const editor = monaco.editor.create(this.$el, EDITOR_OPTS)
+            const model = monaco.editor.createModel(this.code, "html")
 
             // Set change event.
-            editor.getModel().onDidChangeContent(() => {
+            model.onDidChangeContent(() => {
                 this.invalidate()
             })
+
+            // Set model.
+            editor.setModel(model)
 
             // Set markers.
             updateMarkers(editor, this.messages)
