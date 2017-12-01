@@ -68,7 +68,7 @@ export default {
     computed: {
         messages() {
             try {
-                return linter.verify(this.code, this.config)
+                return linter.verify(this.code, this.config, "vue-eslint-demo.vue")
             }
             catch (err) {
                 return [{
@@ -83,7 +83,7 @@ export default {
 
         fixResult() {
             try {
-                return linter.verifyAndFix(this.code, this.config)
+                return linter.verifyAndFix(this.code, this.config, "vue-eslint-demo.vue")
             }
             catch (err) {
                 return {
