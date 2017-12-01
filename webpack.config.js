@@ -34,9 +34,22 @@ ${
 
 // Shim for `src/versions.js`
 const VERSIONS = `export default ${JSON.stringify({
-    "eslint": require("eslint/package.json").version,
-    "eslint-plugin-vue": require("eslint-plugin-vue/package.json").version,
-    "vue-eslint-parser": require("vue-eslint-parser/package.json").version,
+    "vue-eslint-demo": {
+        repo: "mysticatea/vue-eslint-demo",
+        version: require("./package.json").version,
+    },
+    "eslint": {
+        repo: "eslint/eslint",
+        version: require("eslint/package.json").version,
+    },
+    "eslint-plugin-vue": {
+        repo: "vuejs/eslint-plugin-vue",
+        version: require("eslint-plugin-vue/package.json").version,
+    },
+    "vue-eslint-parser": {
+        repo: "mysticatea/vue-eslint-parser",
+        version: require("vue-eslint-parser/package.json").version,
+    },
 })}`
 
 module.exports = {

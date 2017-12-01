@@ -27,22 +27,18 @@
                     @edit="onEdit"
                     @initialize.once="onEditorInitialize"
                 />
-                <message-list
-                    class="app__errors"
-                    :messages="messages"
-                >
-                    Errors.
-                </message-list>
+                <message-list class="app__errors" :messages="messages" />
             </div>
         </div>
         <div class="app__footer">
             <div class="app__footer-message"/>
             <div
                 class="app__version-item"
-                v-for="(version, name) in versions"
+                v-for="(v, name) in versions"
                 :key="name"
             >
-                {{ name }} {{ version }}
+                <a :href="'https://github.com/' + v.repo">{{ name }}</a>
+                v{{ v.version }}
             </div>
         </div>
     </div>
@@ -214,6 +210,8 @@ a:hover {
 
 .app__footer {
     display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
     flex-shrink: 0;
     border-top: 1px solid #CCC;
 }
@@ -222,6 +220,7 @@ a:hover {
     color: #B71C1C;
 }
 .app__version-item {
+    flex-shrink: 0;
     margin-right: 8px;
 }
 .app__version-item:not(:last-child)::after {
