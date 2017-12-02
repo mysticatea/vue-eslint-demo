@@ -6,6 +6,7 @@ const root = "node_modules/monaco-editor/min/vs/"
 const files = [
     "base/worker/workerMain.js",
     "basic-languages/src/html.js",
+    "basic-languages/src/css.js",
     "editor/editor.main.css",
     "editor/editor.main.js",
     "editor/editor.main.nls.js",
