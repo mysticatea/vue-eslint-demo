@@ -10,7 +10,7 @@ main()
  * @returns {void}
  */
 function main() {
-    exec(`git checkout ${version}`)
+    exec(`git checkout v${version}`)
     exec("npm run build")
     exec("git checkout gh-pages")
 
