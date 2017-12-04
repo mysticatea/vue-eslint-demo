@@ -850,13 +850,20 @@ export default Object.freeze({
         XPathResult: false,
         XSLTProcessor: false,
     }),
+
     rules: Object.freeze((() => {
         const rules = {}
-        for (const name of linter.getRules().keys()) {
-            rules[name] = name.startsWith("vue/") ? 2 : 0
+        for (const [name, rule] of linter.getRules()) {
+            const enabled = (
+                name.startsWith("vue/") ||
+                rule.meta.docs.recommended
+            )
+            rules[name] = enabled ? 2 : 0
         }
         return rules
     })()),
+
+    parser: "vue-eslint-parser",
     parserOptions: Object.freeze({
         ecmaVersion: 2017,
         sourceType: "module",
@@ -865,5 +872,4 @@ export default Object.freeze({
             experimentalObjectRestSpread: true,
         }),
     }),
-    parser: "vue-eslint-parser",
 })
