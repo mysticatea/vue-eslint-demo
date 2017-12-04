@@ -142,7 +142,7 @@ export default {
         },
 
         applyUrlHash() {
-            window.location.hash = `#${serializeState(this.$data)}`
+            window.location.replace(`#${serializeState(this.$data)}`)
         },
     },
 }
