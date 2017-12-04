@@ -9,7 +9,7 @@
             </span>
         </label>
         <ul v-if="shown" class="rule-select-category__rules">
-            <li>
+            <li v-if="category.rules.length >= 2">
                 <label class="rule-select-category__rule">
                     <div class="rule-select-category__rule-checkbox">
                         <input
