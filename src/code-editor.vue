@@ -14,7 +14,6 @@ const EDITOR_OPTS = {
         autoFindInSelection: true,
         seedSearchStringFromSelection: true,
     },
-    formatOnPaste: true,
     renderControlCharacters: true,
     renderIndentGuides: true,
     renderWhitespace: "boundary",
@@ -158,13 +157,15 @@ export default {
         return {
             editor: null,
             ready: ready.then(this.initialize),
-            invalidate: debounce(() => {
+            editing: false,
+            invalidate_: debounce(() => {
                 const editor = this.codeEditor
                 if (editor != null) {
                     const model = editor.getModel()
                     const value = model.getValue()
                     this.$emit("edit", value)
                 }
+                this.editing = false
             }, 667),
         }
     },
@@ -188,6 +189,14 @@ export default {
             }
             return null
         },
+
+        actualFixedCode() {
+            const editor = this.codeEditor
+            if (this.editing && editor != null) {
+                return editor.getModel().getValue()
+            }
+            return this.fixedCode
+        },
     },
 
     watch: {
@@ -198,7 +207,7 @@ export default {
             }
         },
 
-        fixedCode(value) {
+        actualFixedCode(value) {
             const editor = this.fixedCodeEditor
             if (editor != null) {
                 updateValue(editor, value)
@@ -273,7 +282,6 @@ export default {
 
             // Set change event.
             original.onDidChangeContent(() => {
-                updateValue(rightEditor, original.getValue())
                 this.invalidate()
             })
 
@@ -285,6 +293,11 @@ export default {
             updateMarkers(rightEditor, this.fixedMessages)
 
             return editor
+        },
+
+        invalidate() {
+            this.editing = true
+            this.invalidate_()
         },
     },
 }
