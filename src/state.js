@@ -3,6 +3,18 @@ import defaultCode from "./default-code.js"
 import defaultConfig from "./default-config.js"
 
 /**
+ * @typedef {Object} State
+ * @property {string} code The source code the user input.
+ * @property {Object} config The config object to lint.
+ * @property {(2|4|8)} indentSize The indent size to set the editor.
+ * @property {("space"|"tab")} indentType The indent type to set the editor.
+ * @property {("codeAndFixedCode"|"codeOnly")} editorType The editor type to set the editor.
+ * @property {Object[]} messages The error messages of the linting result.
+ * @property {string} fixedCode The auto-fixed code.
+ * @property {Object[]} fixedMessages The error messages of the linting result with `--fix`.
+ */
+
+/**
  * Convert an Unicode string to base64.
  * @param {string} text The string to convert.
  * @returns {string} Base64 string.
@@ -24,23 +36,31 @@ function decodeFromBase64(base64) {
 
 /**
  * Create the default state.
- * @returns {{config:any,code:string,showFixedCode:boolean}} The created state.
+ * @returns {State} The created state.
  */
 function createDefaultState() {
     const code = defaultCode
     const config = Object.assign({}, defaultConfig)
     config.rules = Object.assign({}, defaultConfig.rules)
-    const showFixedCode = true
 
-    return { code, config, showFixedCode }
+    return {
+        code,
+        config,
+        indentSize: 2,
+        indentType: "space",
+        editorType: "codeAndFixedCode",
+        messages: [],
+        fixedCode: code,
+        fixedMessages: [],
+    }
 }
 
 /**
  * Initialize state.
  * @param {string} serializedText The string to deserialize.
- * @returns {{config:any,code:string,showFixedCode:boolean}} The created state.
+ * @returns {State} The created state.
  */
-export function deserializeState(serializedText) {
+export function deserializeState(serializedText) { //eslint-disable-line complexity
     const state = createDefaultState()
 
     try {
@@ -60,6 +80,15 @@ export function deserializeState(serializedText) {
                 }
             }
         }
+        if (json.indentSize === 2 || json.indentSize === 4 || json.indentSize === 8) {
+            state.indentSize = json.indentSize
+        }
+        if (json.indentType === "space" || json.indentType === "tab") {
+            state.indentType = json.indentType
+        }
+        if (json.editorType === "codeAndFixedCode" || json.editorType === "codeOnly") {
+            state.editorType = json.editorType
+        }
     }
     catch (_err) {
         // ignores.
@@ -70,7 +99,7 @@ export function deserializeState(serializedText) {
 
 /**
  * Create the base64
- * @param {object} state The state object.
+ * @param {State} state The state object.
  * @returns {string} Serialized string.
  */
 export function serializeState(state) {
@@ -85,7 +114,10 @@ export function serializeState(state) {
         },
         {}
     )
-    const jsonText = JSON.stringify({ code, rules })
+    const indentSize = state.indentSize
+    const indentType = state.indentType
+    const editorType = state.editorType
+    const jsonText = JSON.stringify({ code, rules, indentSize, indentType, editorType })
     const compressedText = pako.deflate(jsonText, { to: "string" })
     return encodeToBase64(compressedText)
 }

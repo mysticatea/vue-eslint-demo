@@ -1,14 +1,28 @@
 <template>
     <div class="app__root">
         <div class="app__header">
-            <label class="app__show-fixed-code-button">
-                <input
-                    type="checkbox"
-                    v-model="showFixedCode"
-                >
-                Show fixed code
+            <div class="app__header-title">
+                Playground for <a href="https://github.com/vuejs/eslint-plugin-vue#readme" target="_blank">eslint-plugin-vue</a>.
+            </div>
+            <label class="app__header-option-item">
+                <select v-model.number="indentSize">
+                    <option value="2">TabSize: 2</option>
+                    <option value="4">TabSize: 4</option>
+                    <option value="8">TabSize: 8</option>
+                </select>
             </label>
-            Playground for <a href="https://github.com/vuejs/eslint-plugin-vue#readme" target="_blank">eslint-plugin-vue</a>.
+            <label class="app__header-option-item">
+                <select v-model="indentType">
+                    <option value="space">Indent: spaces</option>
+                    <option value="tab">Indent: tabs</option>
+                </select>
+            </label>
+            <label class="app__header-option-item">
+                <select v-model="editorType">
+                    <option value="codeAndFixedCode">FixedCode: show</option>
+                    <option value="codeOnly">FixedCode: hide</option>
+                </select>
+            </label>
         </div>
         <div class="app__body">
             <rule-select
@@ -23,8 +37,9 @@
                     :messages="messages"
                     :fixed-code="fixedCode"
                     :fixed-messages="fixedMessages"
+                    :format-options="formatOptions"
                     :show-fixed-code="showFixedCode"
-                    @edit="onEdit"
+                    @edit="onCodeChange"
                     @initialize.once="onEditorInitialize"
                 />
                 <message-list class="app__errors" :messages="messages" />
@@ -66,45 +81,15 @@ export default {
     },
 
     computed: {
-        messages() {
-            try {
-                return linter.verify(this.code, this.config, "vue-eslint-demo.vue")
-            }
-            catch (err) {
-                return [{
-                    fatal: true,
-                    severity: 2,
-                    message: err.message,
-                    line: 1,
-                    column: 0,
-                }]
+        formatOptions() {
+            return {
+                insertSpaces: this.indentType === "space",
+                tabSize: this.indentSize,
             }
         },
 
-        fixResult() {
-            try {
-                return linter.verifyAndFix(this.code, this.config, "vue-eslint-demo.vue")
-            }
-            catch (err) {
-                return {
-                    output: this.code,
-                    messages: [{
-                        fatal: true,
-                        severity: 2,
-                        message: err.message,
-                        line: 1,
-                        column: 0,
-                    }],
-                }
-            }
-        },
-
-        fixedCode() {
-            return this.fixResult.output
-        },
-
-        fixedMessages() {
-            return this.fixResult.messages
+        showFixedCode() {
+            return this.editorType === "codeAndFixedCode"
         },
 
         versions() {
@@ -112,7 +97,27 @@ export default {
         },
     },
 
+    // Use `watch` to re-use the internal state of the linter while making `messages` and `fixedCode`.
+    watch: {
+        code() {
+            this.lint()
+            this.applyUrlHash()
+        },
+        indentSize() {
+            this.lint()
+            this.applyUrlHash()
+        },
+        indentType() {
+            this.lint()
+            this.applyUrlHash()
+        },
+        editorType() {
+            this.applyUrlHash()
+        },
+    },
+
     mounted() {
+        this.lint()
         window.addEventListener("hashchange", this.onUrlHashChange)
     },
     beforeDestroey() {
@@ -120,16 +125,17 @@ export default {
     },
 
     methods: {
-        onEdit(code) {
-            this.code = code
-            this.applyUrlHash()
-        },
-
         onEditorInitialize() {
             window.MainContent.show()
         },
 
+        onCodeChange(code) {
+            this.code = code
+        },
+
         onConfigChange() {
+            // The inside of `this.config` was changed directly.
+            this.lint()
             this.applyUrlHash()
         },
 
@@ -143,6 +149,53 @@ export default {
 
         applyUrlHash() {
             window.location.replace(`#${serializeState(this.$data)}`)
+        },
+
+        lint() {
+            // Adjust the indentation options to the editor settings.
+            const config = Object.assign({}, this.config)
+            const rules = config.rules = Object.assign({}, this.config.rules)
+            const indentType = (this.indentType === "space") ? this.indentSize : "tab"
+            rules.indent = [rules.indent, indentType]
+            rules["vue/html-indent"] = [rules["vue/html-indent"], indentType]
+
+            // Fix
+            try {
+                // At first, fix because `linter.verifyAndFix` does not accept SourceCode object.
+                const ret = linter.verifyAndFix(this.code, config, "vue-eslint-demo.vue")
+                this.fixedCode = ret.output
+                this.fixedMessages = ret.messages
+            }
+            catch (err) {
+                this.fixedCode = this.code
+                this.fixedMessages = [{
+                    fatal: true,
+                    severity: 2,
+                    message: err.message,
+                    line: 1,
+                    column: 0,
+                }]
+            }
+
+            // Lint
+            try {
+                this.messages = linter.verify(
+                    // Cannot reuse until https://github.com/eslint/eslint/pull/8755 is merged.
+                    // linter.getSourceCode(), // Reuse the AST of the previous `linter.verifyAndFix`.
+                    this.code,
+                    config,
+                    "vue-eslint-demo.vue"
+                )
+            }
+            catch (err) {
+                this.messages = [{
+                    fatal: true,
+                    severity: 2,
+                    message: err.message,
+                    line: 1,
+                    column: 0,
+                }]
+            }
         },
     },
 }
@@ -164,12 +217,29 @@ a:hover {
 }
 
 .app__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
     flex-shrink: 0;
-    padding: 8px;
     background-color: #A5D6A7;
     border-bottom: 1px solid #4CAF50;
-    font-weight: bold;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.app__header-title {
+    flex-grow: 1;
+    padding: 8px;
+    font-weight: bold;
+}
+.app__header-option-item {
+    flex-shrink: 0;
+    padding: 2px;
+}
+.app__header-option-item > select {
+    padding: 4px;
+    border: 1px solid #4CAF50;
+    border-radius: 3px;
+    background-color: #E8F5E9;
 }
 
 .app__body {

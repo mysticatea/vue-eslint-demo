@@ -147,6 +147,12 @@ export default {
                 return []
             },
         },
+        formatOptions: {
+            type: Object,
+            default() {
+                return { insertSpaces: true, tabSize: 2 }
+            },
+        },
         showFixedCode: {
             type: Boolean,
             default: false,
@@ -222,11 +228,19 @@ export default {
         },
 
         // But it's not shown.
-        // See https://github.com/Microsoft/monaco-editor/issues/311
+        // See https://github.com/mysticatea/vue-eslint-demo/issues/5
         fixedMessages(value) {
             const editor = this.fixedCodeEditor
             if (editor != null) {
                 updateMarkers(editor, value)
+            }
+        },
+
+        formatOptions(value) {
+            for (const editor of [this.codeEditor, this.fixedCodeEditor]) {
+                if (editor != null) {
+                    editor.getModel().updateOptions(value)
+                }
             }
         },
 
