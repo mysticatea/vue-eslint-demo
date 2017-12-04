@@ -1,3 +1,4 @@
+import pako from "pako"
 import defaultCode from "./default-code.js"
 import defaultConfig from "./default-config.js"
 
@@ -43,7 +44,10 @@ export function deserializeState(serializedText) {
     const state = createDefaultState()
 
     try {
-        const jsonText = decodeFromBase64(serializedText)
+        // For backward compatibility, it can address non-compressed data.
+        const compressed = !serializedText.startsWith("eyJj")
+        const decodedText = decodeFromBase64(serializedText)
+        const jsonText = compressed ? pako.inflate(decodedText, { to: "string" }) : decodedText
         const json = JSON.parse(jsonText)
 
         if (typeof json === "object" && json !== null) {
@@ -81,5 +85,7 @@ export function serializeState(state) {
         },
         {}
     )
-    return encodeToBase64(JSON.stringify({ code, rules }))
+    const jsonText = JSON.stringify({ code, rules })
+    const compressedText = pako.deflate(jsonText, { to: "string" })
+    return encodeToBase64(compressedText)
 }
