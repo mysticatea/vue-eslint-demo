@@ -6,6 +6,7 @@ CACHE MANIFEST
 /vue-eslint-demo/index.html
 /vue-eslint-demo/index.js
 /vue-eslint-demo/vs/base/worker/workerMain.js
+/vue-eslint-demo/vs/basic-languages/src/css.js
 /vue-eslint-demo/vs/basic-languages/src/html.js
 /vue-eslint-demo/vs/editor/contrib/suggest/browser/media/String_16x.svg
 /vue-eslint-demo/vs/editor/contrib/suggest/browser/media/String_inverse_16x.svg
@@ -21,6 +22,6 @@ CACHE MANIFEST
 /vue-eslint-demo/vs/language/typescript/src/mode.js
 /vue-eslint-demo/vs/language/typescript/src/worker.js
 /vue-eslint-demo/vs/loader.js
-#d0c3a2ecd5f90f6700382a72e130d800
+#7b18641a1fd879796c9876d524d42aa7
 NETWORK:
 *
