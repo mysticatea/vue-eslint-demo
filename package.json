@@ -48,7 +48,7 @@
     "deploy": "node scripts/deploy",
     "lint": "eslint .",
     "preversion": "run-s lint build -s",
-    "postversion": "git push && git push --tags && npm run deploy",
+    "postversion": "git push && git push --tags && npm run deploy -- --skip-build",
     "update-deps": "npm install eslint@latest eslint-plugin-vue@next vue-eslint-parser@experimental",
     "watch": "cross-env NODE_ENV=development run-p watch:* -s",
     "watch:html": "cpx src/index.html dist --watch",

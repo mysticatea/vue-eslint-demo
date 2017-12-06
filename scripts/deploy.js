@@ -2,6 +2,7 @@
 
 const sh = require("shelljs")
 const version = require("../package.json").version
+const skipBuild = (process.argv.indexOf("--skip-build") >= 0)
 
 main()
 
@@ -10,8 +11,10 @@ main()
  * @returns {void}
  */
 function main() {
-    exec(`git checkout v${version}`)
-    exec("npm run build")
+    if (skipBuild) {
+        exec(`git checkout v${version}`)
+        exec("npm run build")
+    }
     exec("git checkout gh-pages")
 
     if (String(sh.cat("dist/versions.json")) !== String(sh.cat("versions.json"))) {
