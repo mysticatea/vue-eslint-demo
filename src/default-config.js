@@ -856,7 +856,9 @@ export default Object.freeze({
         for (const [name, rule] of linter.getRules()) {
             const enabled = (
                 name.startsWith("vue/") ||
-                rule.meta.docs.recommended
+                rule.meta.docs.recommended ||
+                name === "indent" ||
+                name === "object-shorthand"
             )
             rules[name] = enabled ? 2 : 0
         }
