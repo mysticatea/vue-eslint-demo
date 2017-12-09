@@ -140,9 +140,9 @@
                     this.parentNode.removeChild(this)
                 }.bind(SplashScreen), 1000)
 
+                MainContent.show = function () { }
                 SplashScreen = undefined
                 MainContent = undefined
-                MainContent.show = function() {}
             }
         })(SplashScreen, MainContent)
 
