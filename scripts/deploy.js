@@ -11,7 +11,7 @@ main()
  * @returns {void}
  */
 function main() {
-    if (skipBuild) {
+    if (!skipBuild) {
         exec(`git checkout v${version}`)
         exec("npm run build")
     }
