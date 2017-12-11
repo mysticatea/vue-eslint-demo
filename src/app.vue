@@ -49,7 +49,6 @@
             </div>
         </div>
         <div class="app__footer">
-            <div class="app__footer-message"/>
             <div
                 class="app__version-item"
                 v-for="(v, name) in versions"
@@ -58,6 +57,10 @@
                 <a :href="'https://github.com/' + v.repo" target="_blank">{{ name }}</a>
                 v{{ v.version }}
             </div>
+        </div>
+        <div class="app__update-ready-toast" v-if="showUpdateReadyToast">
+            <div>Please reload because a new version of this site is available.</div>
+            <button @click="reload">Reload</button>
         </div>
     </div>
 </template>
@@ -79,7 +82,7 @@ export default {
     },
 
     data() {
-        return new AppState(window.location.hash.slice(1))
+        return new AppState(location.hash.slice(1))
     },
 
     computed: {
@@ -140,11 +143,15 @@ export default {
         },
 
         onUrlHashChange() {
-            this.$data.deserialize(window.location.hash.slice(1))
+            this.$data.deserialize(location.hash.slice(1))
         },
 
         applyUrlHash() {
-            window.location.replace(`#${this.$data.serialize()}`)
+            location.replace(`#${this.$data.serialize()}`)
+        },
+
+        reload() {
+            location.reload(false)
         },
     },
 }
@@ -234,15 +241,44 @@ a:hover {
     flex-shrink: 0;
     border-top: 1px solid #CCC;
 }
-.app__footer-message {
-    flex-grow: 1;
-    color: #B71C1C;
-}
 .app__version-item {
     flex-shrink: 0;
     margin-right: 8px;
 }
 .app__version-item:not(:last-child)::after {
     content: ","
+}
+
+.app__update-ready-toast {
+    display: block;
+    position: absolute;
+    right: 24px;
+    bottom: 32px;
+    width: 320px;
+    padding: 8px;
+    border: 1px solid #4CAF50;
+    border-radius: 3px;
+    background: white;
+    box-shadow: 0 4px 16px rgba(0,0,0, 0.5);
+    text-align: center;
+    animation: AppToastIn 0.333s;
+}
+.app__update-ready-toast > div {
+    text-align: left;
+}
+.app__update-ready-toast > button {
+    margin-top: 8px;
+    padding: 4px 32px;
+}
+
+@keyframes AppToastIn {
+    0% {
+        opacity: 0;
+        transform: translate(0, 50%) scale(0.5);
+    }
+    100% {
+        opacity: 1;
+        transform: none;
+    }
 }
 </style>

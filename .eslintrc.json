@@ -15,6 +15,7 @@
         "browser": false
     },
     "globals": {
+        "applicationCache": false,
         "atob": false,
         "btoa": false,
         "console": false,

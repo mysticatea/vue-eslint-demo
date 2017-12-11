@@ -24,6 +24,7 @@ export default class PlaygroundState {
         this.messages = []
         this.fixedCode = code
         this.fixedMessages = []
+        this.showUpdateReadyToast = false
 
         const deserialized =
             typeof serializedString === "string" &&
