@@ -4,26 +4,6 @@ import defaultConfig from "./app-state/default-config.js"
 import { linter, ruleCategories } from "./app-state/eslint.js"
 
 /**
- * Convert an Unicode string to base64.
- * @param {string} text The string to convert.
- * @returns {string} Base64 string.
- * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa#Unicode_strings
- */
-function encodeToBase64(text) {
-    return window.btoa(unescape(encodeURIComponent(text)))
-}
-
-/**
- * Convert a base64 string to Unicode.
- * @param {string} base64 The string to convert.
- * @returns {string} Unicode string.
- * @see https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa#Unicode_strings
- */
-function decodeFromBase64(base64) {
-    return decodeURIComponent(escape(window.atob(base64)))
-}
-
-/**
  * The state object for this application.
  */
 export default class PlaygroundState {
@@ -101,7 +81,7 @@ export default class PlaygroundState {
         })
         const compressedString = pako.deflate(jsonString, { to: "string" })
 
-        return encodeToBase64(compressedString)
+        return btoa(compressedString)
     }
 
     /**
@@ -116,7 +96,7 @@ export default class PlaygroundState {
         try {
             // For backward compatibility, it can address non-compressed data.
             const compressed = !serializedString.startsWith("eyJj")
-            const decodedText = decodeFromBase64(serializedString)
+            const decodedText = atob(serializedString)
             const jsonText = compressed ? pako.inflate(decodedText, { to: "string" }) : decodedText
             const json = JSON.parse(jsonText)
             let changed = false
