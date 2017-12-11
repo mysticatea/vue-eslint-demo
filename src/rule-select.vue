@@ -50,6 +50,5 @@ export default {
     padding: 0;
     overflow-x: hidden;
     overflow-y: scroll;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAHElEQVQYV2O8e/fuf2VlZUYGKIAzMARgKjFUAABhrQgFvaGkawAAAABJRU5ErkJggg==) repeat;
 }
 </style>

@@ -116,10 +116,6 @@ export default {
 </script>
 
 <style>
-.rule-select-category__root {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-}
-
 .rule-select-category__header {
     display: block;
     padding: 8px;

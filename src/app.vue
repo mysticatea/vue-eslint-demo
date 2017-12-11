@@ -165,11 +165,17 @@ a:hover {
     color: #2196F3;
 }
 
+select, button {
+    font-family: inherit;
+}
+
 .app__root {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAHElEQVQYV2O8e/fuf2VlZUYGKIAzMARgKjFUAABhrQgFvaGkawAAAABJRU5ErkJggg==) repeat;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
 .app__header {
@@ -180,7 +186,6 @@ a:hover {
     flex-shrink: 0;
     background-color: #A5D6A7;
     border-bottom: 1px solid #4CAF50;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 .app__header-title {
     flex-grow: 1;
@@ -240,6 +245,7 @@ a:hover {
     flex-wrap: wrap;
     flex-shrink: 0;
     border-top: 1px solid #CCC;
+    background-color: white;
 }
 .app__version-item {
     flex-shrink: 0;
