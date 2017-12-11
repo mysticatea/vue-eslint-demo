@@ -42,7 +42,10 @@
                     @edit="onCodeChange"
                     @initialize.once="onEditorInitialize"
                 />
-                <message-list class="app__errors" :messages="messages" />
+                <message-list
+                    class="app__errors"
+                    :messages="messages"
+                />
             </div>
         </div>
         <div class="app__footer">
@@ -60,11 +63,10 @@
 </template>
 
 <script>
+import AppState from "./app-state.js"
 import CodeEditor from "./code-editor.vue"
 import MessageList from "./message-list.vue"
 import RuleSelect from "./rule-select.vue"
-import { linter } from "./eslint.js"
-import { deserializeState, serializeState } from "./state.js"
 import versions from "./versions.js"
 
 export default {
@@ -77,7 +79,7 @@ export default {
     },
 
     data() {
-        return deserializeState(window.location.hash.slice(1))
+        return new AppState(window.location.hash.slice(1))
     },
 
     computed: {
@@ -97,18 +99,17 @@ export default {
         },
     },
 
-    // Use `watch` to re-use the internal state of the linter while making `messages` and `fixedCode`.
     watch: {
         code() {
-            this.lint()
+            this.$data.lint()
             this.applyUrlHash()
         },
         indentSize() {
-            this.lint()
+            this.$data.lint()
             this.applyUrlHash()
         },
         indentType() {
-            this.lint()
+            this.$data.lint()
             this.applyUrlHash()
         },
         editorType() {
@@ -117,7 +118,6 @@ export default {
     },
 
     mounted() {
-        this.lint()
         window.addEventListener("hashchange", this.onUrlHashChange)
     },
     beforeDestroey() {
@@ -135,67 +135,16 @@ export default {
 
         onConfigChange() {
             // The inside of `this.config` was changed directly.
-            this.lint()
+            this.$data.lint()
             this.applyUrlHash()
         },
 
         onUrlHashChange() {
-            const newSerializedState = window.location.hash.slice(1)
-            const oldSerializedState = serializeState(this.$data)
-            if (newSerializedState !== oldSerializedState) {
-                Object.assign(this.$data, deserializeState(newSerializedState))
-            }
+            this.$data.deserialize(window.location.hash.slice(1))
         },
 
         applyUrlHash() {
-            window.location.replace(`#${serializeState(this.$data)}`)
-        },
-
-        lint() {
-            // Adjust the indentation options to the editor settings.
-            const config = Object.assign({}, this.config)
-            const rules = config.rules = Object.assign({}, this.config.rules)
-            const indentType = (this.indentType === "space") ? this.indentSize : "tab"
-            rules.indent = [rules.indent, indentType]
-            rules["vue/html-indent"] = [rules["vue/html-indent"], indentType]
-
-            // Fix
-            try {
-                // At first, fix because `linter.verifyAndFix` does not accept SourceCode object.
-                const ret = linter.verifyAndFix(this.code, config, "vue-eslint-demo.vue")
-                this.fixedCode = ret.output
-                this.fixedMessages = ret.messages
-            }
-            catch (err) {
-                this.fixedCode = this.code
-                this.fixedMessages = [{
-                    fatal: true,
-                    severity: 2,
-                    message: err.message,
-                    line: 1,
-                    column: 0,
-                }]
-            }
-
-            // Lint
-            try {
-                this.messages = linter.verify(
-                    // Cannot reuse until https://github.com/eslint/eslint/pull/8755 is merged.
-                    // linter.getSourceCode(), // Reuse the AST of the previous `linter.verifyAndFix`.
-                    this.code,
-                    config,
-                    "vue-eslint-demo.vue"
-                )
-            }
-            catch (err) {
-                this.messages = [{
-                    fatal: true,
-                    severity: 2,
-                    message: err.message,
-                    line: 1,
-                    column: 0,
-                }]
-            }
+            window.location.replace(`#${this.$data.serialize()}`)
         },
     },
 }

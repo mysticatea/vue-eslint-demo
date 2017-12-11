@@ -21,7 +21,7 @@
 
 <script>
 import MdIcon from "./md-icon.vue"
-import { getRuleUrl } from "./eslint.js"
+import { getRuleUrl } from "./util.js"
 
 export default {
     name: "MessageList",

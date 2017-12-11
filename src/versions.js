@@ -1,3 +1,4 @@
+// THE CONTENT OF THIS FILE WILL BE INJECTED IN BUILD SCRIPT.
 export default {
     "vue-eslint-demo": {
         repo: "mysticatea/vue-eslint-demo",

@@ -15,6 +15,7 @@
         "browser": false
     },
     "globals": {
+        "console": false,
         "document": false,
         "location": false,
         "window": false

@@ -13,7 +13,7 @@
 
 <script>
 import RuleSelectCategory from "./rule-select-category.vue"
-import { ruleCategories } from "./eslint.js"
+import { ruleCategories } from "./app-state.js"
 
 export default {
     name: "RuleSelect",
