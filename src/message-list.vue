@@ -14,7 +14,7 @@
             :key="i"
         >
             <md-icon kind="warning"/>
-            {{ m.line }}:{{ m.column }}{{ space(m) }}{{ m.message }} (<a :href="url(m.ruleId)" target="_blank" v-if="m.ruleId != null">{{ m.ruleId }}</a><span v-else>FATAL</span>)
+            {{ m.line }}:{{ m.column }}{{ space(m) }}{{ m.message }} (<a :href="url(m.ruleId)" target="_blank" v-if="m.ruleId != null" rel="noopener">{{ m.ruleId }}</a><span v-else>FATAL</span>)
         </li>
     </ul>
 </template>

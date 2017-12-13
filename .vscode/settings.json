@@ -2,5 +2,8 @@
     "eslint.validate": [
         "javascript",
         {"autoFix": true, "language": "vue"}
-    ]
+    ],
+    "eslint.options": {
+        "rulePaths": ["eslint-rules"]
+    }
 }

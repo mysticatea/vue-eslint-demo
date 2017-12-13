@@ -2,7 +2,7 @@
     <div class="app__root">
         <div class="app__header">
             <div class="app__header-title">
-                Playground for <a href="https://github.com/vuejs/eslint-plugin-vue#readme" target="_blank">eslint-plugin-vue</a>.
+                Playground for <a href="https://github.com/vuejs/eslint-plugin-vue#readme" target="_blank" rel="noopener">eslint-plugin-vue</a>.
             </div>
             <label class="app__header-option-item">
                 <select v-model.number="indentSize">
@@ -54,7 +54,7 @@
                 v-for="(v, name) in versions"
                 :key="name"
             >
-                <a :href="'https://github.com/' + v.repo" target="_blank">{{ name }}</a>
+                <a :href="'https://github.com/' + v.repo" target="_blank" rel="noopener">{{ name }}</a>
                 v{{ v.version }}
             </div>
         </div>

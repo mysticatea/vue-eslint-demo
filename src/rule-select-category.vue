@@ -42,7 +42,7 @@
                     <div class="rule-select-category__rule-name">
                         {{ stripPrefix(rule.name) }}
                     </div>
-                    <a class="rule-select-category__rule-link" :href="url(rule.name)" target="_blank">
+                    <a class="rule-select-category__rule-link" :href="url(rule.name)" target="_blank" rel="noopener">
                         <md-icon kind="launch" title="Open document"/>
                     </a>
                 </label>
