@@ -46,7 +46,7 @@
     "build:versions": "node scripts/make-versions",
     "clean": "rimraf dist",
     "deploy": "node scripts/deploy",
-    "lint": "eslint .",
+    "lint": "eslint . --rulesdir eslint-rules",
     "preversion": "run-s lint build -s",
     "postversion": "git push && git push --tags && npm run deploy -- --skip-build",
     "update-deps": "npm install eslint@latest eslint-plugin-vue@next vue-eslint-parser@experimental",
