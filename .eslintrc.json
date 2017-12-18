@@ -29,7 +29,6 @@
         "node/no-unpublished-import": "error",
         "vue/html-indent": ["error", 4],
         "vue/max-attributes-per-line": "off",
-
         "require-noopener": "error"
     }
 }

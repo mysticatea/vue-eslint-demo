@@ -20,7 +20,7 @@ module.exports = (context) =>
             if (hasTargetBlank && !hasRelNoopener) {
                 context.report({
                     node: node.startTag,
-                    message: "Use 'rel=\"noopener\" to open new tab.",
+                    message: "Use 'rel=\"noopener\"' to open new tab.",
                     * fix(fixer) {
                         const lastAttribute = attributes[attributes.length - 1]
                         yield fixer.insertTextAfter(lastAttribute, " rel=\"noopener\"")
