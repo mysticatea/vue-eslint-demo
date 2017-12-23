@@ -118,11 +118,14 @@ export default {
 <style>
 .rule-select-category__header {
     display: block;
+    position: sticky;
+    top: 0;
     padding: 8px;
     background-color: #E8F5E9;
     border-bottom: 1px solid #4CAF50;
     font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 2px 2px rgba(0,0,0, 0.25);
 }
 .rule-select-category__count {
     white-space: nowrap;
