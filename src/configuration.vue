@@ -1,30 +1,38 @@
 <template>
-    <ul class="rule-select__root">
-        <rule-select-category
+    <ul class="configuration__root">
+        <configuration-parser-select
+            :config="config"
+            @change="onChange"
+        />
+        <configuration-rules-select
             v-for="category of categories"
             v-if="category.rules.length >= 1"
+            :key="category.name"
             :category="category"
             :config="config"
-            :key="category.name"
-            @change="emitChangeEvent"
+            @change="onChange"
         />
     </ul>
 </template>
 
 <script>
-import RuleSelectCategory from "./rule-select-category.vue"
+import ConfigurationParserSelect from "./configuration-parser-select.vue"
+import ConfigurationRulesSelect from "./configuration-rules-select.vue"
 import { ruleCategories } from "./app-state.js"
 
 export default {
-    name: "RuleSelect",
+    name: "Configuration",
 
-    components: { RuleSelectCategory },
+    components: { ConfigurationParserSelect, ConfigurationRulesSelect },
 
     props: {
         config: {
             type: Object,
             default() {
-                return { rules: {} }
+                return {
+                    parserOptions: { parser: "espree" },
+                    rules: {},
+                }
             },
         },
     },
@@ -36,7 +44,7 @@ export default {
     },
 
     methods: {
-        emitChangeEvent() {
+        onChange() {
             this.$emit("change")
         },
     },
@@ -44,7 +52,7 @@ export default {
 </script>
 
 <style>
-.rule-select__root {
+.configuration__root {
     list-style: none;
     margin: 0;
     padding: 0;

@@ -16,4 +16,8 @@ export default {
         repo: "mysticatea/vue-eslint-parser",
         version: "0.0.0",
     },
+    "babel-eslint": {
+        repo: "babel/babel-eslint",
+        version: "0.0.0",
+    },
 }

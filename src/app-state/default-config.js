@@ -867,6 +867,7 @@ export default Object.freeze({
 
     parser: "vue-eslint-parser",
     parserOptions: Object.freeze({
+        parser: "espree",
         ecmaVersion: 2017,
         sourceType: "module",
         ecmaFeatures: Object.freeze({

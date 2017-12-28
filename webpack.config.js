@@ -17,7 +17,7 @@ ${
         .join("\n")
 }
 })
-`
+    `
 
 // Shim for `eslint-plugin-vue/lib/index.js`
 const ESLINT_PLUGIN_VUE_INDEX = `module.exports = {
@@ -49,6 +49,10 @@ const VERSIONS = `export default ${JSON.stringify({
     "vue-eslint-parser": {
         repo: "mysticatea/vue-eslint-parser",
         version: require("vue-eslint-parser/package.json").version,
+    },
+    "babel-eslint": {
+        repo: "babel/babel-eslint",
+        version: require("babel-eslint/package.json").version,
     },
 })}`
 
@@ -139,7 +143,26 @@ module.exports = {
                 loader: "string-replace-loader",
                 options: {
                     search: "require(parserOptions.parser || \"espree\")",
-                    replace: "require(\"espree\")",
+                    replace: "(parserOptions.parser === \"babel-eslint\" ? require(\"babel-eslint\") : require(\"espree\"))",
+                },
+            },
+            // Patch for `babel-eslint`
+            {
+                test: new RegExp(`babel-eslint\\${path.sep}lib\\${path.sep}index\\.js$`),
+                loader: "string-replace-loader",
+                options: {
+                    search: "[\\s\\S]+", // whole file.
+                    replace: "module.exports.parseForESLint = require(\"./parse-with-scope\")",
+                    flags: "g",
+                },
+            },
+            {
+                test: new RegExp(`babel-eslint\\${path.sep}lib\\${path.sep}patch-eslint-scope\\.js$`),
+                loader: "string-replace-loader",
+                options: {
+                    search: "[\\s\\S]+", // whole file.
+                    replace: "module.exports = () => {}",
+                    flags: "g",
                 },
             },
         ],

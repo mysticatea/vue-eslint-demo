@@ -25,7 +25,7 @@
             </label>
         </div>
         <div class="app__body">
-            <rule-select
+            <configuration
                 class="app__sidebar"
                 :config="config"
                 @change="onConfigChange"
@@ -68,8 +68,8 @@
 <script>
 import AppState from "./app-state.js"
 import CodeEditor from "./code-editor.vue"
+import Configuration from "./configuration.vue"
 import MessageList from "./message-list.vue"
-import RuleSelect from "./rule-select.vue"
 import versions from "./versions.js"
 
 export default {
@@ -78,7 +78,7 @@ export default {
     components: {
         CodeEditor,
         MessageList,
-        RuleSelect,
+        Configuration,
     },
 
     data() {

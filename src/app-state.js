@@ -15,6 +15,7 @@ export default class PlaygroundState {
         const code = defaultCode
         const config = Object.assign({}, defaultConfig)
         config.rules = Object.assign({}, defaultConfig.rules)
+        config.parserOptions = Object.assign({}, defaultConfig.parserOptions)
 
         this.code = code
         this.config = config
@@ -79,6 +80,7 @@ export default class PlaygroundState {
             indentSize: this.indentSize,
             indentType: this.indentType,
             editorType: this.editorType,
+            parser: this.config.parserOptions.parser,
         })
         const compressedString = pako.deflate(jsonString, { to: "string" })
 
@@ -116,18 +118,21 @@ export default class PlaygroundState {
                         }
                     }
                 }
-            }
-            if ((json.indentSize === 2 || json.indentSize === 4 || json.indentSize === 8) && json.indentSize !== this.indentSize) {
-                this.indentSize = json.indentSize
-                changed = true
-            }
-            if ((json.indentType === "space" || json.indentType === "tab") && json.indentType !== this.indentType) {
-                this.indentType = json.indentType
-                changed = true
-            }
-            if ((json.editorType === "codeAndFixedCode" || json.editorType === "codeOnly") && json.editorType !== this.editorType) {
-                this.editorType = json.editorType
-                changed = true
+                if ((json.indentSize === 2 || json.indentSize === 4 || json.indentSize === 8) && json.indentSize !== this.indentSize) {
+                    this.indentSize = json.indentSize
+                    changed = true
+                }
+                if ((json.indentType === "space" || json.indentType === "tab") && json.indentType !== this.indentType) {
+                    this.indentType = json.indentType
+                    changed = true
+                }
+                if ((json.editorType === "codeAndFixedCode" || json.editorType === "codeOnly") && json.editorType !== this.editorType) {
+                    this.editorType = json.editorType
+                    changed = true
+                }
+                if ((json.parser === "espree" || json.parser === "babel-eslint") && json.parser !== this.config.parserOptions.parser) {
+                    this.config.parserOptions.parser = json.parser
+                }
             }
 
             // Update messages, fixedCode, and fixedMessages.
