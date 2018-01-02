@@ -54,8 +54,12 @@ exec("npm run build")
 // Load gh-pages.
 if (ATOKEN) {
     exec("git fetch --depth=1 https://github.com/mysticatea/vue-eslint-demo.git gh-pages:gh-pages")
+    exec("git checkout gh-pages")
 }
-exec("git checkout gh-pages")
+else {
+    exec("git checkout gh-pages")
+    exec("git pull")
+}
 
 // Check versions.
 const oldVersions = String(sh.cat("versions.json"))
