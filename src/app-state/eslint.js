@@ -24,8 +24,12 @@ const ruleCategories = (() => {
             name: "Priority C: Recommended",
             rules: [],
         },
-        "unspecified": {
-            name: "Unspecified yet",
+        "use-with-caution": {
+            name: "Priority D: Use with Caution",
+            rules: [],
+        },
+        "uncategorized": {
+            name: "Uncategorized",
             rules: [],
         },
         "base": {
@@ -44,7 +48,7 @@ const ruleCategories = (() => {
             continue
         }
         const category = name.startsWith("vue/")
-            ? categoryMap[meta.docs.category] || categoryMap.unspecified
+            ? categoryMap[meta.docs.category] || categoryMap.uncategorized
             : categoryMap.core
 
         category.rules.push({
