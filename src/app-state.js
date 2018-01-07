@@ -155,16 +155,12 @@ export default class PlaygroundState {
     lint() {
         const config = this._configToLint
 
-        // Fix
+        // Lint
         try {
-            // At first, fix because `linter.verifyAndFix` does not accept SourceCode object.
-            const ret = linter.verifyAndFix(this.code, config)
-            this.fixedCode = ret.output
-            this.fixedMessages = ret.messages
+            this.messages = linter.verify(this.code, config)
         }
         catch (err) {
-            this.fixedCode = this.code
-            this.fixedMessages = [{
+            this.messages = [{
                 fatal: true,
                 severity: 2,
                 message: err.message,
@@ -173,17 +169,15 @@ export default class PlaygroundState {
             }]
         }
 
-        // Lint
+        // Fix
         try {
-            this.messages = linter.verify(
-                // Cannot reuse until https://github.com/eslint/eslint/pull/8755 is merged.
-                // linter.getSourceCode(), // Reuse the AST of the previous `linter.verifyAndFix`.
-                this.code,
-                config
-            )
+            const ret = linter.verifyAndFix(this.code, config)
+            this.fixedCode = ret.output
+            this.fixedMessages = ret.messages
         }
         catch (err) {
-            this.messages = [{
+            this.fixedCode = this.code
+            this.fixedMessages = [{
                 fatal: true,
                 severity: 2,
                 message: err.message,
