@@ -17,19 +17,23 @@ ${
         .join("\n")
 }
 })
-    `
+`
 
 // Shim for `eslint-plugin-vue/lib/index.js`
 const ESLINT_PLUGIN_VUE_INDEX = `module.exports = {
-${
+    rules: {${
     fs.readdirSync("node_modules/eslint-plugin-vue/lib/rules")
         .filter(filename => path.extname(filename) === ".js")
         .map(filename => {
             const ruleId = path.basename(filename, ".js")
-            return `    "vue/${ruleId}": require("eslint-plugin-vue/lib/rules/${filename}"),`
+            return `        "${ruleId}": require("eslint-plugin-vue/lib/rules/${filename}"),`
         })
         .join("\n")
 }
+    },
+    processors: {
+        ".vue": require("eslint-plugin-vue/lib/processor")
+    }
 }`
 
 // Shim for `src/versions.js`

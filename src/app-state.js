@@ -158,7 +158,7 @@ export default class PlaygroundState {
         // Fix
         try {
             // At first, fix because `linter.verifyAndFix` does not accept SourceCode object.
-            const ret = linter.verifyAndFix(this.code, config, "vue-eslint-demo.vue")
+            const ret = linter.verifyAndFix(this.code, config)
             this.fixedCode = ret.output
             this.fixedMessages = ret.messages
         }
@@ -179,8 +179,7 @@ export default class PlaygroundState {
                 // Cannot reuse until https://github.com/eslint/eslint/pull/8755 is merged.
                 // linter.getSourceCode(), // Reuse the AST of the previous `linter.verifyAndFix`.
                 this.code,
-                config,
-                "vue-eslint-demo.vue"
+                config
             )
         }
         catch (err) {
