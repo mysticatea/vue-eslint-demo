@@ -76,6 +76,7 @@ const ruleCategories = (() => {
         category.rules.push({
             name,
             description: meta.docs.description || "no description",
+            url: meta.docs.url,
             fixable: Boolean(meta.fixable),
         })
     }

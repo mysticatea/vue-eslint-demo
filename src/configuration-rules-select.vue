@@ -10,7 +10,6 @@
 
 <script>
 import ConfigurationCategory from "./configuration-category.vue"
-import { getRuleUrl } from "./util.js"
 
 export default {
     name: "ConfigurationRulesSelect",
@@ -35,13 +34,12 @@ export default {
     computed: {
         rules() {
             const severityMap = this.config.rules
-            return this.category.rules.map(r => ({
-                id: r.name,
-                name: r.name,
-                description: r.description,
-                url: getRuleUrl(r.name),
-                checked: severityMap[r.name] === 2,
-            }))
+            return this.category.rules.map(rule =>
+                Object.assign(
+                    { id: rule.name, checked: severityMap[rule.name] === 2 },
+                    rule
+                )
+            )
         },
 
         countChecked() {
@@ -69,7 +67,7 @@ export default {
             const severityMap = this.config.rules
             if (id == null) {
                 for (const rule of this.rules) {
-                    severityMap[rule.id] = (checked ? 2 : 0)
+                    severityMap[rule.name] = (checked ? 2 : 0)
                 }
             }
             else {

@@ -3,6 +3,17 @@ import defaultCode from "./app-state/default-code.js"
 import defaultConfig from "./app-state/default-config.js"
 import { linter, ruleCategories } from "./app-state/eslint.js"
 
+export { ruleCategories }
+
+/**
+ * Get the document URL of a rule.
+ * @param {string} ruleId The rule ID to get.
+ * @returns {string|null} The document URL of the rule.
+ */
+export function getRuleUrl(ruleId) {
+    return linter.getRules().get(ruleId).meta.docs.url
+}
+
 /**
  * The state object for this application.
  */
@@ -187,5 +198,3 @@ export default class PlaygroundState {
         }
     }
 }
-
-export { ruleCategories }
