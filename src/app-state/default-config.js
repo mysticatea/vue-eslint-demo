@@ -857,7 +857,6 @@ export default Object.freeze({
             const enabled = (
                 name.startsWith("vue/") ||
                 rule.meta.docs.recommended ||
-                name === "indent" ||
                 name === "object-shorthand"
             )
             rules[name] = enabled ? 2 : 0
