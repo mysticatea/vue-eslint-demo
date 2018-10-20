@@ -34,12 +34,11 @@ export default {
     computed: {
         rules() {
             const severityMap = this.config.rules
-            return this.category.rules.map(rule =>
-                Object.assign(
-                    { id: rule.name, checked: severityMap[rule.name] === 2 },
-                    rule
-                )
-            )
+            return this.category.rules.map(rule => ({
+                id: rule.name,
+                checked: severityMap[rule.name] === 2,
+                ...rule,
+            }))
         },
 
         countChecked() {
@@ -67,11 +66,10 @@ export default {
             const severityMap = this.config.rules
             if (id == null) {
                 for (const rule of this.rules) {
-                    severityMap[rule.name] = (checked ? 2 : 0)
+                    severityMap[rule.name] = checked ? 2 : 0
                 }
-            }
-            else {
-                severityMap[id] = (checked ? 2 : 0)
+            } else {
+                severityMap[id] = checked ? 2 : 0
             }
             this.$emit("change")
         },

@@ -3,18 +3,27 @@
         class="message-list__root"
     >
         <li
-            class="message-list__item no-errors"
             v-if="messages.length === 0"
+            class="message-list__item no-errors"
         >
             No errors.
         </li>
         <li
-            class="message-list__item"
             v-for="(m, i) of messages"
             :key="i"
+            class="message-list__item"
         >
-            <md-icon kind="warning"/>
-            {{ m.line }}:{{ m.column }}{{ space(m) }}{{ m.message }} (<a :href="url(m.ruleId)" target="_blank" v-if="m.ruleId != null" rel="noopener">{{ m.ruleId }}</a><span v-else>FATAL</span>)
+            <md-icon kind="warning" />
+            {{ m.line }}:{{ m.column }}{{ space(m) }}{{ m.message }} (<a 
+                v-if="m.ruleId != null" 
+                :href="url(m.ruleId)" 
+                target="_blank" 
+                rel="noopener"
+            >
+                {{ m.ruleId }}
+            </a><span v-else>
+                FATAL
+            </span>)
         </li>
     </ul>
 </template>
@@ -59,9 +68,9 @@ export default {
 .message-list__item {
     margin: 0;
     padding: 4px 8px;
-    border-bottom: 1px dotted #CCC;
+    border-bottom: 1px dotted #ccc;
     background-color: white;
-    color: #B71C1C;
+    color: #b71c1c;
 }
 .message-list__item.no-errors {
     color: #333333;

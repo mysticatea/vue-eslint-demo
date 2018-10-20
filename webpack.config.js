@@ -2,34 +2,34 @@
 
 const fs = require("fs")
 const path = require("path")
-const MinifyPlugin = require("babel-minify-webpack-plugin")
 const webpack = require("webpack")
 
 // Shim for `eslint/lib/load-rules.js`
 const ESLINT_LOAD_RULES = `module.exports = () => ({
-${
-    fs.readdirSync("node_modules/eslint/lib/rules")
-        .filter(filename => path.extname(filename) === ".js" && !filename.startsWith("_"))
-        .map(filename => {
-            const ruleId = path.basename(filename, ".js")
-            return `    "${ruleId}": require("eslint/lib/rules/${filename}"),`
-        })
-        .join("\n")
-}
+${fs
+    .readdirSync("node_modules/eslint/lib/rules")
+    .filter(
+        filename =>
+            path.extname(filename) === ".js" && !filename.startsWith("_"),
+    )
+    .map(filename => {
+        const ruleId = path.basename(filename, ".js")
+        return `    "${ruleId}": require("eslint/lib/rules/${filename}"),`
+    })
+    .join("\n")}
 })
 `
 
 // Shim for `eslint-plugin-vue/lib/index.js`
 const ESLINT_PLUGIN_VUE_INDEX = `module.exports = {
-    rules: {${
-    fs.readdirSync("node_modules/eslint-plugin-vue/lib/rules")
+    rules: {${fs
+        .readdirSync("node_modules/eslint-plugin-vue/lib/rules")
         .filter(filename => path.extname(filename) === ".js")
         .map(filename => {
             const ruleId = path.basename(filename, ".js")
             return `        "${ruleId}": require("eslint-plugin-vue/lib/rules/${filename}"),`
         })
-        .join("\n")
-}
+        .join("\n")}
     },
     processors: {
         ".vue": require("eslint-plugin-vue/lib/processor")
@@ -42,7 +42,7 @@ const VERSIONS = `export default ${JSON.stringify({
         repo: "mysticatea/vue-eslint-demo",
         version: require("./package.json").version,
     },
-    "eslint": {
+    eslint: {
         repo: "eslint/eslint",
         version: require("eslint/package.json").version,
     },
@@ -71,17 +71,13 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,
-                use: [
-                    "vue-style-loader",
-                    "css-loader",
-                ],
+                use: ["vue-style-loader", "css-loader"],
             },
             {
                 test: /\.vue$/,
                 loader: "vue-loader",
                 options: {
-                    loaders: {
-                    },
+                    loaders: {},
                     // other vue-loader options go here
                 },
             },
@@ -111,7 +107,9 @@ module.exports = {
             },
             // `eslint/lib/load-rules.js` depends on `fs` module we cannot use in browsers, so needs shimming.
             {
-                test: new RegExp(`eslint\\${path.sep}lib\\${path.sep}load-rules\\.js$`),
+                test: new RegExp(
+                    `eslint\\${path.sep}lib\\${path.sep}load-rules\\.js$`,
+                ),
                 loader: "string-replace-loader",
                 options: {
                     search: "[\\s\\S]+", // whole file.
@@ -121,7 +119,9 @@ module.exports = {
             },
             // `eslint-plugin-vue/lib/index.js` depends on `fs` module we cannot use in browsers, so needs shimming.
             {
-                test: new RegExp(`eslint-plugin-vue\\${path.sep}lib\\${path.sep}index\\.js$`),
+                test: new RegExp(
+                    `eslint-plugin-vue\\${path.sep}lib\\${path.sep}index\\.js$`,
+                ),
                 loader: "string-replace-loader",
                 options: {
                     search: "[\\s\\S]+", // whole file.
@@ -132,7 +132,9 @@ module.exports = {
             // `eslint` has some dynamic `require(...)`.
             // Delete those.
             {
-                test: new RegExp(`eslint\\${path.sep}lib\\${path.sep}(?:linter|rules)\\.js$`),
+                test: new RegExp(
+                    `eslint\\${path.sep}lib\\${path.sep}(?:linter|rules)\\.js$`,
+                ),
                 loader: "string-replace-loader",
                 options: {
                     search: "(?:\\|\\||(\\())\\s*require\\(.+?\\)",
@@ -146,22 +148,30 @@ module.exports = {
                 test: /vue-eslint-parser/,
                 loader: "string-replace-loader",
                 options: {
-                    search: "require(parserOptions.parser || \"espree\")",
-                    replace: "(parserOptions.parser === \"babel-eslint\" ? require(\"babel-eslint\") : require(\"espree\"))",
+                    search: 'require(parserOptions.parser || "espree")',
+                    replace:
+                        '(parserOptions.parser === "babel-eslint" ? require("babel-eslint") : require("espree"))',
                 },
             },
             // Patch for `babel-eslint`
             {
-                test: new RegExp(`babel-eslint\\${path.sep}lib\\${path.sep}index\\.js$`),
+                test: new RegExp(
+                    `babel-eslint\\${path.sep}lib\\${path.sep}index\\.js$`,
+                ),
                 loader: "string-replace-loader",
                 options: {
                     search: "[\\s\\S]+", // whole file.
-                    replace: "module.exports.parseForESLint = require(\"./parse-with-scope\")",
+                    replace:
+                        'module.exports.parseForESLint = require("./parse-with-scope")',
                     flags: "g",
                 },
             },
             {
-                test: new RegExp(`babel-eslint\\${path.sep}lib\\${path.sep}patch-eslint-scope\\.js$`),
+                test: new RegExp(
+                    `babel-eslint\\${path.sep}lib\\${
+                        path.sep
+                    }patch-eslint-scope\\.js$`,
+                ),
                 loader: "string-replace-loader",
                 options: {
                     search: "[\\s\\S]+", // whole file.
@@ -189,14 +199,12 @@ module.exports = {
     devtool: "#eval-source-map",
 }
 
-//eslint-disable-next-line no-process-env
 if (process.env.NODE_ENV === "production") {
     module.exports.devtool = false
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
-            "process.env": { NODE_ENV: "\"production\"" },
+            "process.env": { NODE_ENV: '"production"' },
         }),
-        new MinifyPlugin(),
         new webpack.LoaderOptionsPlugin({ minimize: true }),
     ])
 }

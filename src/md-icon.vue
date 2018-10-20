@@ -1,5 +1,7 @@
 <template functional>
-    <i class="material-icons" :title="title">{{ props.kind }}</i>
+    <i class="material-icons" :title="title">
+        {{ props.kind }}
+    </i>
 </template>
 
 <script>

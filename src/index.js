@@ -8,10 +8,10 @@ const app = new Vue({
             this.$refs.app.showUpdateReadyToast = true
         },
     },
-    render: (h) => h(App, { ref: "app" }),
+    render: h => h(App, { ref: "app" }),
 })
 
 // Check update.
-applicationCache.addEventListener("updateready", () => {
+window.applicationCache.addEventListener("updateready", () => {
     app.showUpdateReadyToast()
 })

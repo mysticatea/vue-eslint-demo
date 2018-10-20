@@ -6,7 +6,6 @@
         />
         <configuration-rules-select
             v-for="category of categories"
-            v-if="category.rules.length >= 1"
             :key="category.name"
             :category="category"
             :config="config"
@@ -39,7 +38,7 @@ export default {
 
     computed: {
         categories() {
-            return ruleCategories
+            return ruleCategories.filter(category => category.rules.length >= 1)
         },
     },
 

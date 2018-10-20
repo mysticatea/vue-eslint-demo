@@ -1,0 +1,14 @@
+root: true
+extends:
+  - plugin:@mysticatea/es2018
+  - plugin:@mysticatea/+modules
+  - plugin:@mysticatea/+browser
+
+rules:
+  require-unicode-regexp: off
+
+overrides:
+  - files: "*.vue"
+    rules:
+      "@mysticatea/vue/component-name-in-template-casing": [error, kebab-case]
+      require-noopener: error

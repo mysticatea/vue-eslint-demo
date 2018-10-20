@@ -24,9 +24,9 @@ export default class PlaygroundState {
      */
     constructor(serializedString = "") {
         const code = defaultCode
-        const config = Object.assign({}, defaultConfig)
-        config.rules = Object.assign({}, defaultConfig.rules)
-        config.parserOptions = Object.assign({}, defaultConfig.parserOptions)
+        const config = { ...defaultConfig }
+        config.rules = { ...defaultConfig.rules }
+        config.parserOptions = { ...defaultConfig.parserOptions }
 
         this.code = code
         this.config = config
@@ -54,15 +54,12 @@ export default class PlaygroundState {
      */
     get _enabledRules() {
         const allRules = this.config.rules
-        return Object.keys(allRules).reduce(
-            (map, id) => {
-                if (allRules[id] === 2) {
-                    map[id] = 2
-                }
-                return map
-            },
-            {}
-        )
+        return Object.keys(allRules).reduce((map, id) => {
+            if (allRules[id] === 2) {
+                map[id] = 2
+            }
+            return map
+        }, {})
     }
 
     /**
@@ -71,9 +68,9 @@ export default class PlaygroundState {
      */
     get _configToLint() {
         // Adjust the indentation options to the editor settings.
-        const config = Object.assign({}, this.config)
-        const rules = config.rules = Object.assign({}, this.config.rules)
-        const indentType = (this.indentType === "space") ? this.indentSize : "tab"
+        const config = { ...this.config }
+        const rules = (config.rules = { ...this.config.rules })
+        const indentType = this.indentType === "space" ? this.indentSize : "tab"
         rules.indent = [rules.indent, indentType]
         rules["vue/html-indent"] = [rules["vue/html-indent"], indentType]
 
@@ -98,12 +95,13 @@ export default class PlaygroundState {
         return btoa(compressedString)
     }
 
+    /*eslint-disable complexity */
     /**
      * Deserialize a given serialized string then update this object.
      * @param {string} serializedString A serialized string.
      * @returns {boolean} `true` if this state object was changed.
      */
-    deserialize(serializedString) { //eslint-disable-line complexity
+    deserialize(serializedString) {
         if (serializedString === "") {
             return false
         }
@@ -111,7 +109,9 @@ export default class PlaygroundState {
             // For backward compatibility, it can address non-compressed data.
             const compressed = !serializedString.startsWith("eyJj")
             const decodedText = atob(serializedString)
-            const jsonText = compressed ? pako.inflate(decodedText, { to: "string" }) : decodedText
+            const jsonText = compressed
+                ? pako.inflate(decodedText, { to: "string" })
+                : decodedText
             const json = JSON.parse(jsonText)
             let changed = false
 
@@ -129,19 +129,36 @@ export default class PlaygroundState {
                         }
                     }
                 }
-                if ((json.indentSize === 2 || json.indentSize === 4 || json.indentSize === 8) && json.indentSize !== this.indentSize) {
+                if (
+                    (json.indentSize === 2 ||
+                        json.indentSize === 4 ||
+                        json.indentSize === 8) &&
+                    json.indentSize !== this.indentSize
+                ) {
                     this.indentSize = json.indentSize
                     changed = true
                 }
-                if ((json.indentType === "space" || json.indentType === "tab") && json.indentType !== this.indentType) {
+                if (
+                    (json.indentType === "space" ||
+                        json.indentType === "tab") &&
+                    json.indentType !== this.indentType
+                ) {
                     this.indentType = json.indentType
                     changed = true
                 }
-                if ((json.editorType === "codeAndFixedCode" || json.editorType === "codeOnly") && json.editorType !== this.editorType) {
+                if (
+                    (json.editorType === "codeAndFixedCode" ||
+                        json.editorType === "codeOnly") &&
+                    json.editorType !== this.editorType
+                ) {
                     this.editorType = json.editorType
                     changed = true
                 }
-                if ((json.parser === "espree" || json.parser === "babel-eslint") && json.parser !== this.config.parserOptions.parser) {
+                if (
+                    (json.parser === "espree" ||
+                        json.parser === "babel-eslint") &&
+                    json.parser !== this.config.parserOptions.parser
+                ) {
                     this.config.parserOptions.parser = json.parser
                 }
             }
@@ -152,12 +169,12 @@ export default class PlaygroundState {
             }
 
             return changed
-        }
-        catch (error) {
-            console.error(error) //eslint-disable-line no-console
+        } catch (error) {
+            console.error(error)
             return false
         }
     }
+    /*eslint-enable complexity */
 
     /**
      * Execute ESLint to update messages, fixedCode, and fixedMessages.
@@ -169,15 +186,16 @@ export default class PlaygroundState {
         // Lint
         try {
             this.messages = linter.verify(this.code, config)
-        }
-        catch (err) {
-            this.messages = [{
-                fatal: true,
-                severity: 2,
-                message: err.message,
-                line: 1,
-                column: 0,
-            }]
+        } catch (err) {
+            this.messages = [
+                {
+                    fatal: true,
+                    severity: 2,
+                    message: err.message,
+                    line: 1,
+                    column: 0,
+                },
+            ]
         }
 
         // Fix
@@ -185,16 +203,17 @@ export default class PlaygroundState {
             const ret = linter.verifyAndFix(this.code, config)
             this.fixedCode = ret.output
             this.fixedMessages = ret.messages
-        }
-        catch (err) {
+        } catch (err) {
             this.fixedCode = this.code
-            this.fixedMessages = [{
-                fatal: true,
-                severity: 2,
-                message: err.message,
-                line: 1,
-                column: 0,
-            }]
+            this.fixedMessages = [
+                {
+                    fatal: true,
+                    severity: 2,
+                    message: err.message,
+                    line: 1,
+                    column: 0,
+                },
+            ]
         }
     }
 }

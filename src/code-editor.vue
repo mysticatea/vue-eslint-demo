@@ -1,5 +1,5 @@
 <template>
-    <div class="code-editor-container"/>
+    <div class="code-editor-container" />
 </template>
 
 <script>
@@ -259,7 +259,9 @@ export default {
         initialize() {
             dispose(this.editor)
             this.$el.innerHTML = ""
-            this.editor = this.showFixedCode ? this.createTwoPaneEditor() : this.createEditor()
+            this.editor = this.showFixedCode
+                ? this.createTwoPaneEditor()
+                : this.createEditor()
             this.$emit("initialize")
         },
 

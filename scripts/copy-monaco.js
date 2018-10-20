@@ -30,8 +30,8 @@ console.log("> cpx", glob, dist, ...args)
 const cp = childProcess.spawn(
     process.execPath,
     [binFile, glob, dist, ...args],
-    { stdio: "inherit" }
+    { stdio: "inherit" },
 )
-cp.on("exit", (exitCode) => {
+cp.on("exit", exitCode => {
     process.exitCode = exitCode
 })

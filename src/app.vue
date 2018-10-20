@@ -2,25 +2,41 @@
     <div class="app__root">
         <div class="app__header">
             <div class="app__header-title">
-                Playground for <a href="https://github.com/vuejs/eslint-plugin-vue#readme" target="_blank" rel="noopener">eslint-plugin-vue</a>.
+                Playground for <a href="https://github.com/vuejs/eslint-plugin-vue#readme" target="_blank" rel="noopener">
+                    eslint-plugin-vue
+                </a>.
             </div>
             <label class="app__header-option-item">
                 <select v-model.number="indentSize">
-                    <option value="2">TabSize: 2</option>
-                    <option value="4">TabSize: 4</option>
-                    <option value="8">TabSize: 8</option>
+                    <option value="2">
+                        TabSize: 2
+                    </option>
+                    <option value="4">
+                        TabSize: 4
+                    </option>
+                    <option value="8">
+                        TabSize: 8
+                    </option>
                 </select>
             </label>
             <label class="app__header-option-item">
                 <select v-model="indentType">
-                    <option value="space">Indent: spaces</option>
-                    <option value="tab">Indent: tabs</option>
+                    <option value="space">
+                        Indent: spaces
+                    </option>
+                    <option value="tab">
+                        Indent: tabs
+                    </option>
                 </select>
             </label>
             <label class="app__header-option-item">
                 <select v-model="editorType">
-                    <option value="codeAndFixedCode">FixedCode: show</option>
-                    <option value="codeOnly">FixedCode: hide</option>
+                    <option value="codeAndFixedCode">
+                        FixedCode: show
+                    </option>
+                    <option value="codeOnly">
+                        FixedCode: hide
+                    </option>
                 </select>
             </label>
         </div>
@@ -50,17 +66,21 @@
         </div>
         <div class="app__footer">
             <div
-                class="app__version-item"
                 v-for="(v, name) in versions"
                 :key="name"
+                class="app__version-item"
             >
-                <a :href="'https://github.com/' + v.repo" target="_blank" rel="noopener">{{ name }}</a>
+                <a :href="'https://github.com/' + v.repo" target="_blank" rel="noopener">
+                    {{ name }}
+                </a>
                 v{{ v.version }}
             </div>
         </div>
-        <div class="app__update-ready-toast" v-if="showUpdateReadyToast">
+        <div v-if="showUpdateReadyToast" class="app__update-ready-toast">
             <div>Please reload because a new version of this site is available.</div>
-            <button @click="reload">Reload</button>
+            <button @click="reload">
+                Reload
+            </button>
         </div>
     </div>
 </template>
@@ -162,10 +182,11 @@ a {
     color: inherit;
 }
 a:hover {
-    color: #2196F3;
+    color: #2196f3;
 }
 
-select, button {
+select,
+button {
     font-family: inherit;
 }
 
@@ -174,8 +195,10 @@ select, button {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAHElEQVQYV2O8e/fuf2VlZUYGKIAzMARgKjFUAABhrQgFvaGkawAAAABJRU5ErkJggg==) repeat;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAHElEQVQYV2O8e/fuf2VlZUYGKIAzMARgKjFUAABhrQgFvaGkawAAAABJRU5ErkJggg==)
+        repeat;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+        sans-serif;
 }
 
 .app__header {
@@ -184,8 +207,8 @@ select, button {
     align-items: center;
     justify-content: flex-end;
     flex-shrink: 0;
-    background-color: #A5D6A7;
-    border-bottom: 1px solid #4CAF50;
+    background-color: #a5d6a7;
+    border-bottom: 1px solid #4caf50;
 }
 .app__header-title {
     flex-grow: 1;
@@ -198,9 +221,9 @@ select, button {
 }
 .app__header-option-item > select {
     padding: 4px;
-    border: 1px solid #4CAF50;
+    border: 1px solid #4caf50;
     border-radius: 3px;
-    background-color: #E8F5E9;
+    background-color: #e8f5e9;
 }
 
 .app__body {
@@ -211,7 +234,7 @@ select, button {
 
 .app__sidebar {
     width: calc(25% - 1px);
-    border-right: 1px solid #CCC;
+    border-right: 1px solid #ccc;
 }
 
 .app__main {
@@ -223,7 +246,7 @@ select, button {
 .app__editor {
     height: calc(75% - 1px);
     flex-grow: 1;
-    border-bottom: 1px solid #CCC;
+    border-bottom: 1px solid #ccc;
 }
 
 .app__errors {
@@ -235,7 +258,7 @@ select, button {
     float: right;
     font-weight: normal;
 }
-.app__show-fixed-code-button > input[type=checkbox] {
+.app__show-fixed-code-button > input[type="checkbox"] {
     vertical-align: middle;
 }
 
@@ -244,7 +267,7 @@ select, button {
     justify-content: flex-end;
     flex-wrap: wrap;
     flex-shrink: 0;
-    border-top: 1px solid #CCC;
+    border-top: 1px solid #ccc;
     background-color: white;
 }
 .app__version-item {
@@ -252,7 +275,7 @@ select, button {
     margin-right: 8px;
 }
 .app__version-item:not(:last-child)::after {
-    content: ","
+    content: ",";
 }
 
 .app__update-ready-toast {
@@ -262,10 +285,10 @@ select, button {
     bottom: 32px;
     width: 320px;
     padding: 8px;
-    border: 1px solid #4CAF50;
+    border: 1px solid #4caf50;
     border-radius: 3px;
     background: white;
-    box-shadow: 0 4px 16px rgba(0,0,0, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
     text-align: center;
     animation: AppToastIn 0.333s;
 }

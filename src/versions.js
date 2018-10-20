@@ -4,7 +4,7 @@ export default {
         repo: "mysticatea/vue-eslint-demo",
         version: "0.0.0",
     },
-    "eslint": {
+    eslint: {
         repo: "eslint/eslint",
         version: "0.0.0",
     },

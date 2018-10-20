@@ -34,7 +34,7 @@ const linter = new class extends Linter {
 const ruleCategories = (() => {
     const ruleMap = linter.getRules()
     const categoryMap = {
-        "essential": {
+        essential: {
             name: "Priority A: Essential",
             rules: [],
         },
@@ -42,7 +42,7 @@ const ruleCategories = (() => {
             name: "Priority B: Strongly Recommended",
             rules: [],
         },
-        "recommended": {
+        recommended: {
             name: "Priority C: Recommended",
             rules: [],
         },
@@ -50,15 +50,15 @@ const ruleCategories = (() => {
             name: "Priority D: Use with Caution",
             rules: [],
         },
-        "uncategorized": {
+        uncategorized: {
             name: "Uncategorized",
             rules: [],
         },
-        "base": {
+        base: {
             name: "Base Rules",
             rules: [],
         },
-        "core": {
+        core: {
             name: "ESLint Core Rules",
             rules: [],
         },

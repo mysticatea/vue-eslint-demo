@@ -6,7 +6,7 @@
 
 const sh = require("shelljs")
 const version = require("../package.json").version
-const ATOKEN = process.env.ATOKEN //eslint-disable-line no-process-env
+const ATOKEN = process.env.ATOKEN
 
 //------------------------------------------------------------------------------
 // Helpers
@@ -53,10 +53,11 @@ exec("npm run build")
 
 // Load gh-pages.
 if (ATOKEN) {
-    exec("git fetch --depth=1 https://github.com/mysticatea/vue-eslint-demo.git gh-pages:gh-pages")
+    exec(
+        "git fetch --depth=1 https://github.com/mysticatea/vue-eslint-demo.git gh-pages:gh-pages",
+    )
     exec("git checkout gh-pages")
-}
-else {
+} else {
     exec("git checkout gh-pages")
     exec("git pull")
 }
@@ -72,8 +73,14 @@ if (newVersions !== oldVersions) {
     rm("-rf", "vs", "index.*")
     cp("-r", "dist/*", ".")
     exec("git add -A")
-    exec("git commit -m \"Update: website\"")
-    exec(`git push${ATOKEN ? ` https://mysticatea:${ATOKEN}@github.com/mysticatea/vue-eslint-demo.git gh-pages:gh-pages` : ""}`)
+    exec('git commit -m "Update: website"')
+    exec(
+        `git push${
+            ATOKEN
+                ? ` https://mysticatea:${ATOKEN}@github.com/mysticatea/vue-eslint-demo.git gh-pages:gh-pages`
+                : ""
+        }`,
+    )
 }
 
 // Back to master.

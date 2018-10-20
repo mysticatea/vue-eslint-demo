@@ -851,18 +851,19 @@ export default Object.freeze({
         XSLTProcessor: false,
     }),
 
-    rules: Object.freeze((() => {
-        const rules = {}
-        for (const [name, rule] of linter.getRules()) {
-            const enabled = (
-                name.startsWith("vue/") ||
-                rule.meta.docs.recommended ||
-                name === "object-shorthand"
-            )
-            rules[name] = enabled ? 2 : 0
-        }
-        return rules
-    })()),
+    rules: Object.freeze(
+        (() => {
+            const rules = {}
+            for (const [name, rule] of linter.getRules()) {
+                const enabled =
+                    name.startsWith("vue/") ||
+                    rule.meta.docs.recommended ||
+                    name === "object-shorthand"
+                rules[name] = enabled ? 2 : 0
+            }
+            return rules
+        })(),
+    ),
 
     parser: "vue-eslint-parser",
     parserOptions: Object.freeze({

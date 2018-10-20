@@ -40,9 +40,7 @@ export default {
     computed: {
         parsers() {
             const parser = this.config.parserOptions.parser
-            return PARSRES.map(p =>
-                Object.assign({ checked: p.id === parser }, p)
-            )
+            return PARSRES.map(p => ({ checked: p.id === parser, ...p }))
         },
     },
 
