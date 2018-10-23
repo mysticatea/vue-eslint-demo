@@ -3,7 +3,6 @@ import plugin from "eslint-plugin-vue"
 import * as parser from "vue-eslint-parser"
 
 const verifyOptions = Object.freeze({
-    filename: "vue-eslint-demo.vue",
     preprocess: plugin.processors[".vue"].preprocess,
     postprocess: plugin.processors[".vue"].postprocess,
 })
