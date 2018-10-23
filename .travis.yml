@@ -5,7 +5,7 @@ branches:
     - master
 
 language: node_js
-node_js: "8"
+node_js: "10"
 
 script:
   - git config --local user.name "Travis CI" && npm run deploy
