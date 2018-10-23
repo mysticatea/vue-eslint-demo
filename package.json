@@ -1,6 +1,6 @@
 {
   "name": "vue-eslint-demo",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "The online demo to check `eslint-plugin-vue`.",
   "engines": {
     "node": ">=8"
