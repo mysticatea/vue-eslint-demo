@@ -18,12 +18,18 @@ export const linter = new class extends Linter {
     }
 
     /** @inheritdoc */
-    verify(textOrSourceCode, config) {
-        return super.verify(textOrSourceCode, config, verifyOptions)
+    verify(textOrSourceCode, config, options) {
+        return super.verify(textOrSourceCode, config, {
+            ...options,
+            ...verifyOptions,
+        })
     }
 
     /** @inheritdoc */
-    verifyAndFix(text, config) {
-        return super.verifyAndFix(text, config, verifyOptions)
+    verifyAndFix(text, config, options) {
+        return super.verifyAndFix(text, config, {
+            ...options,
+            ...verifyOptions,
+        })
     }
 }()

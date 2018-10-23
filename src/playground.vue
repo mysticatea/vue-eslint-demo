@@ -4,6 +4,7 @@
             class="playground__editor"
             :code="code"
             :config="actualConfig"
+            :filename="filename"
             :format="formatOptions"
             :language="language"
             :linter="linter"
@@ -76,6 +77,10 @@ export default {
             return config
         },
 
+        filename() {
+            return this.looksHtml ? "vue-eslint-demo.vue" : "vue-eslint-demo.js"
+        },
+
         formatOptions() {
             return {
                 insertSpaces: this.indentType === "space",
@@ -84,12 +89,15 @@ export default {
         },
 
         language() {
-            const trimedCode = this.code.trim()
-            return trimedCode.startsWith("<") ? "html" : "javascript"
+            return this.looksHtml ? "html" : "javascript"
         },
 
         linter() {
             return linter
+        },
+
+        looksHtml() {
+            return this.code.trim().startsWith("<")
         },
     },
 
