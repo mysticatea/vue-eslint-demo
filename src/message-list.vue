@@ -14,10 +14,10 @@
             class="message-list__item"
         >
             <md-icon kind="warning" />
-            {{ m.line }}:{{ m.column }}{{ space(m) }}{{ m.message }} (<a 
-                v-if="m.ruleId != null" 
-                :href="url(m.ruleId)" 
-                target="_blank" 
+            {{ m.line }}:{{ m.column }}{{ space(m) }}{{ m.message }} (<a
+                v-if="m.ruleId != null"
+                :href="url(m.ruleId)"
+                target="_blank"
                 rel="noopener"
             >
                 {{ m.ruleId }}
@@ -29,8 +29,8 @@
 </template>
 
 <script>
+import { getRuleUrl } from "./lib/get-rule-url"
 import MdIcon from "./md-icon.vue"
-import { getRuleUrl } from "./app-state"
 
 export default {
     name: "MessageList",

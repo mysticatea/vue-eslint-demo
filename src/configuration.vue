@@ -2,14 +2,12 @@
     <ul class="configuration__root">
         <configuration-parser-select
             :config="config"
-            @change="onChange"
         />
         <configuration-rules-select
             v-for="category of categories"
             :key="category.name"
             :category="category"
             :config="config"
-            @change="onChange"
         />
     </ul>
 </template>
@@ -17,7 +15,7 @@
 <script>
 import ConfigurationParserSelect from "./configuration-parser-select.vue"
 import ConfigurationRulesSelect from "./configuration-rules-select.vue"
-import { ruleCategories } from "./app-state.js"
+import { ruleCategories } from "./lib/rule-categories"
 
 export default {
     name: "Configuration",
@@ -28,10 +26,7 @@ export default {
         config: {
             type: Object,
             default() {
-                return {
-                    parserOptions: { parser: "espree" },
-                    rules: {},
-                }
+                return {}
             },
         },
     },
@@ -39,12 +34,6 @@ export default {
     computed: {
         categories() {
             return ruleCategories.filter(category => category.rules.length >= 1)
-        },
-    },
-
-    methods: {
-        onChange() {
-            this.$emit("change")
         },
     },
 }

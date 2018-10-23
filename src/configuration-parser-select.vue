@@ -1,54 +1,59 @@
 <template>
     <configuration-category
         header="Parser"
-        :header-peek="'('+config.parserOptions.parser+')'"
+        :header-peek="'(' + currentParser + ')'"
         :items="parsers"
-        @change="onChange"
+        @select="onItemSelect"
     />
 </template>
 
 <script>
+import { selectParser } from "./actions"
 import ConfigurationCategory from "./configuration-category.vue"
 
-const PARSRES = [
-    {
+const PARSRES = Object.freeze([
+    Object.freeze({
         id: "espree",
         name: "espree (the default parser)",
         url: "https://github.com/eslint/espree",
-    },
-    {
+    }),
+    Object.freeze({
         id: "babel-eslint",
         name: "babel-eslint",
         url: "https://github.com/babel/babel-eslint",
-    },
-]
+    }),
+])
 
 export default {
     name: "ConfigurationParserSelect",
 
     components: { ConfigurationCategory },
 
+    inject: ["sendAction"],
     props: {
         config: {
             type: Object,
             default() {
-                return { parserOptions: { parser: "espree" } }
+                return {}
             },
         },
     },
 
     computed: {
         parsers() {
-            const parser = this.config.parserOptions.parser
-            return PARSRES.map(p => ({ checked: p.id === parser, ...p }))
+            const parser = this.currentParser
+            return PARSRES.map(p => ({ ...p, checked: p.id === parser }))
+        },
+
+        currentParser() {
+            return this.config.parserOptions.parser || "espree"
         },
     },
 
     methods: {
-        onChange(id, checked) {
-            if (checked) {
-                this.config.parserOptions.parser = id
-                this.$emit("change")
+        onItemSelect({ id, selected }) {
+            if (selected) {
+                this.sendAction(selectParser, id)
             }
         },
     },

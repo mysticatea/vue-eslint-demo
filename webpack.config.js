@@ -1,40 +1,8 @@
 /*eslint-env node */
 
-const fs = require("fs")
 const path = require("path")
-const webpack = require("webpack")
-
-// Shim for `eslint/lib/load-rules.js`
-const ESLINT_LOAD_RULES = `module.exports = () => ({
-${fs
-    .readdirSync("node_modules/eslint/lib/rules")
-    .filter(
-        filename =>
-            path.extname(filename) === ".js" && !filename.startsWith("_"),
-    )
-    .map(filename => {
-        const ruleId = path.basename(filename, ".js")
-        return `    "${ruleId}": require("eslint/lib/rules/${filename}"),`
-    })
-    .join("\n")}
-})
-`
-
-// Shim for `eslint-plugin-vue/lib/index.js`
-const ESLINT_PLUGIN_VUE_INDEX = `module.exports = {
-    rules: {${fs
-        .readdirSync("node_modules/eslint-plugin-vue/lib/rules")
-        .filter(filename => path.extname(filename) === ".js")
-        .map(filename => {
-            const ruleId = path.basename(filename, ".js")
-            return `        "${ruleId}": require("eslint-plugin-vue/lib/rules/${filename}"),`
-        })
-        .join("\n")}
-    },
-    processors: {
-        ".vue": require("eslint-plugin-vue/lib/processor")
-    }
-}`
+const postcssPresetEnv = require("postcss-preset-env")
+const VueLoaderPlugin = require("vue-loader/lib/plugin")
 
 // Shim for `src/versions.js`
 const VERSIONS = `export default ${JSON.stringify({
@@ -60,151 +28,171 @@ const VERSIONS = `export default ${JSON.stringify({
     },
 })}`
 
-module.exports = {
-    entry: "./src/index.js",
-    output: {
-        path: path.resolve(__dirname, "./dist"),
-        publicPath: "/",
-        filename: "index.js",
-    },
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: ["vue-style-loader", "css-loader"],
-            },
-            {
-                test: /\.vue$/,
-                loader: "vue-loader",
-                options: {
-                    loaders: {},
-                    // other vue-loader options go here
-                },
-            },
-            {
-                test: /\.js$/,
-                loader: "babel-loader",
-                exclude: /node_modules/,
-            },
-            {
-                test: /\.(png|jpg|gif|svg|eot|ijmap|ttf|woff2?)$/,
-                loader: "file-loader",
-                options: {
-                    name: "[name].[ext]",
-                    outputPath: "assets/",
-                    publicPath: "./",
-                },
-            },
-            // Replace `./src/versions.js` with the current versions.
-            {
-                test: new RegExp(`src\\${path.sep}versions\\.js$`),
-                loader: "string-replace-loader",
-                options: {
-                    search: "[\\s\\S]+", // whole file.
-                    replace: VERSIONS,
-                    flags: "g",
-                },
-            },
-            // `eslint/lib/load-rules.js` depends on `fs` module we cannot use in browsers, so needs shimming.
-            {
-                test: new RegExp(
-                    `eslint\\${path.sep}lib\\${path.sep}load-rules\\.js$`,
-                ),
-                loader: "string-replace-loader",
-                options: {
-                    search: "[\\s\\S]+", // whole file.
-                    replace: ESLINT_LOAD_RULES,
-                    flags: "g",
-                },
-            },
-            // `eslint-plugin-vue/lib/index.js` depends on `fs` module we cannot use in browsers, so needs shimming.
-            {
-                test: new RegExp(
-                    `eslint-plugin-vue\\${path.sep}lib\\${path.sep}index\\.js$`,
-                ),
-                loader: "string-replace-loader",
-                options: {
-                    search: "[\\s\\S]+", // whole file.
-                    replace: ESLINT_PLUGIN_VUE_INDEX,
-                    flags: "g",
-                },
-            },
-            // `eslint` has some dynamic `require(...)`.
-            // Delete those.
-            {
-                test: new RegExp(
-                    `eslint\\${path.sep}lib\\${path.sep}(?:linter|rules)\\.js$`,
-                ),
-                loader: "string-replace-loader",
-                options: {
-                    search: "(?:\\|\\||(\\())\\s*require\\(.+?\\)",
-                    replace: "$1",
-                    flags: "g",
-                },
-            },
-            // `vue-eslint-parser` has `require(parserOptions.parser || "espree")`.
-            // Modify it by a static importing.
-            {
-                test: /vue-eslint-parser/,
-                loader: "string-replace-loader",
-                options: {
-                    search: 'require(parserOptions.parser || "espree")',
-                    replace:
-                        '(parserOptions.parser === "babel-eslint" ? require("babel-eslint") : require("espree"))',
-                },
-            },
-            // Patch for `babel-eslint`
-            {
-                test: new RegExp(
-                    `babel-eslint\\${path.sep}lib\\${path.sep}index\\.js$`,
-                ),
-                loader: "string-replace-loader",
-                options: {
-                    search: "[\\s\\S]+", // whole file.
-                    replace:
-                        'module.exports.parseForESLint = require("./parse-with-scope")',
-                    flags: "g",
-                },
-            },
-            {
-                test: new RegExp(
-                    `babel-eslint\\${path.sep}lib\\${
-                        path.sep
-                    }patch-eslint-scope\\.js$`,
-                ),
-                loader: "string-replace-loader",
-                options: {
-                    search: "[\\s\\S]+", // whole file.
-                    replace: "module.exports = () => {}",
-                    flags: "g",
-                },
-            },
-        ],
-    },
-    resolve: {
-        alias: {
-            vue$: "vue/dist/vue.esm.js",
-        },
-        extensions: ["*", ".js", ".vue", ".json"],
-    },
-    devServer: {
-        contentBase: path.join(__dirname, "dist"),
-        historyApiFallback: true,
-        noInfo: true,
-        overlay: true,
-    },
-    performance: {
-        hints: false,
-    },
-    devtool: "#eval-source-map",
-}
+module.exports = env => {
+    const prod = Boolean(env && env.production)
+    const mode = prod ? "production" : "development"
+    const browserlist = [">1%", "not dead", "not ie 11"]
 
-if (process.env.NODE_ENV === "production") {
-    module.exports.devtool = false
-    module.exports.plugins = (module.exports.plugins || []).concat([
-        new webpack.DefinePlugin({
-            "process.env": { NODE_ENV: '"production"' },
-        }),
-        new webpack.LoaderOptionsPlugin({ minimize: true }),
-    ])
+    return {
+        mode,
+        target: "web",
+        entry: "./src/index.js",
+        output: {
+            path: path.resolve(__dirname, "./dist"),
+            filename: "index.js",
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.vue$/,
+                    use: ["vue-loader"],
+                },
+                {
+                    test: /\.m?js$/,
+                    exclude: /node_modules[\\/](?!vue-eslint-editor)/,
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                babelrc: false,
+                                cacheDirectory: true,
+                                plugins: [
+                                    "@babel/plugin-syntax-dynamic-import",
+                                    [
+                                        "@babel/plugin-transform-runtime",
+                                        { useESModules: true },
+                                    ],
+                                ],
+                                presets: [
+                                    [
+                                        "@babel/preset-env",
+                                        {
+                                            modules: false,
+                                            targets: browserlist,
+                                            useBuiltIns: "entry",
+                                        },
+                                    ],
+                                ],
+                            },
+                        },
+                    ],
+                },
+                {
+                    test: /\.css$/,
+                    use: [
+                        {
+                            loader: "vue-style-loader",
+                            options: {},
+                        },
+                        {
+                            loader: "css-loader",
+                            options: {},
+                        },
+                        {
+                            loader: "postcss-loader",
+                            options: {
+                                plugins: [
+                                    postcssPresetEnv({
+                                        browsers: browserlist,
+                                        stage: 3,
+                                    }),
+                                ],
+                            },
+                        },
+                    ],
+                },
+                {
+                    test: /\.(png|jpg|gif|svg|eot|ijmap|ttf|woff2?)$/,
+                    use: [
+                        {
+                            loader: "url-loader",
+                            options: {
+                                limit: 8192,
+                            },
+                        },
+                    ],
+                },
+                // Replace `./src/versions.js` with the current versions.
+                {
+                    test: /src[\\/]versions/,
+                    use: [
+                        {
+                            loader: "string-replace-loader",
+                            options: {
+                                search: "[\\s\\S]+", // whole file.
+                                replace: VERSIONS,
+                                flags: "g",
+                            },
+                        },
+                    ],
+                },
+                // `vue-eslint-parser` has `require(parserOptions.parser || "espree")`.
+                // Modify it by a static importing.
+                {
+                    test: /node_modules[/\\]vue-eslint-parser[/\\]index\.js$/,
+                    use: [
+                        {
+                            loader: "string-replace-loader",
+                            options: {
+                                search:
+                                    'typeof parserOptions.parser === "string"\n        ? require(parserOptions.parser)\n        : require("espree")',
+                                replace:
+                                    '(parserOptions.parser === "babel-eslint" ? require("babel-eslint") : require("espree"))',
+                            },
+                        },
+                    ],
+                },
+                // Patch for `babel-eslint` -- accessing `global` causes build error.
+                {
+                    test: /node_modules[/\\]babel-eslint[/\\]lib[/\\]analyze-scope\.js$/,
+                    use: [
+                        {
+                            loader: "string-replace-loader",
+                            options: {
+                                search: 'require("./patch-eslint-scope")',
+                                replace: "Object",
+                            },
+                        },
+                    ],
+                },
+                // Patch for `eslint-utils` -- accessing `global` causes build error.
+                {
+                    test: /node_modules[/\\]eslint-utils[/\\]index\.m?js$/,
+                    use: [
+                        {
+                            loader: "string-replace-loader",
+                            options: {
+                                search: "\\bin global\\b",
+                                replace: "in window",
+                                flags: "g",
+                            },
+                        },
+                        {
+                            loader: "string-replace-loader",
+                            options: {
+                                search: "\\bglobal\\[",
+                                replace: "window[",
+                                flags: "g",
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        resolve: {
+            alias: {
+                vue$: "vue/dist/vue.esm.js",
+            },
+            extensions: [".mjs", ".js", ".vue", ".json"],
+        },
+        plugins: [new VueLoaderPlugin()],
+        devServer: {
+            contentBase: path.join(__dirname, "dist"),
+            compress: true,
+        },
+        performance: {
+            hints: false,
+        },
+        devtool: false,
+    }
 }

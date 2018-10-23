@@ -1,4 +1,4 @@
-import { linter } from "./eslint.js"
+import { linter } from "../lib/eslint.js"
 
 export default Object.freeze({
     globals: Object.freeze({
@@ -868,11 +868,8 @@ export default Object.freeze({
     parser: "vue-eslint-parser",
     parserOptions: Object.freeze({
         parser: "espree",
-        ecmaVersion: 2017,
+        ecmaVersion: 2019,
         sourceType: "module",
-        ecmaFeatures: Object.freeze({
-            jsx: true,
-            experimentalObjectRestSpread: true,
-        }),
+        ecmaFeatures: Object.freeze({ jsx: true }),
     }),
 })

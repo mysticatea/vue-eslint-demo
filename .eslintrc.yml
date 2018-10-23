@@ -5,7 +5,8 @@ extends:
   - plugin:@mysticatea/+browser
 
 rules:
-  require-unicode-regexp: off
+  no-trailing-spaces: error
+  require-unicode-regexp: "off"
 
 overrides:
   - files: "*.vue"

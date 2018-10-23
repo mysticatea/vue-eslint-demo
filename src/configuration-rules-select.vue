@@ -1,14 +1,17 @@
 <template>
     <configuration-category
+        lump-text="(all rules)"
         multi
         :header="category.name"
         :header-peek="counterText"
         :items="rules"
-        @change="onChange"
+        @select="onItemSelect"
+        @bulkselect="onBulkSelect"
     />
 </template>
 
 <script>
+import { selectRuleSeverity } from "./actions"
 import ConfigurationCategory from "./configuration-category.vue"
 
 export default {
@@ -16,6 +19,7 @@ export default {
 
     components: { ConfigurationCategory },
 
+    inject: ["sendAction"],
     props: {
         config: {
             type: Object,
@@ -35,9 +39,9 @@ export default {
         rules() {
             const severityMap = this.config.rules
             return this.category.rules.map(rule => ({
+                ...rule,
                 id: rule.name,
                 checked: severityMap[rule.name] === 2,
-                ...rule,
             }))
         },
 
@@ -62,16 +66,15 @@ export default {
     },
 
     methods: {
-        onChange(id, checked) {
-            const severityMap = this.config.rules
-            if (id == null) {
-                for (const rule of this.rules) {
-                    severityMap[rule.name] = checked ? 2 : 0
-                }
-            } else {
-                severityMap[id] = checked ? 2 : 0
-            }
-            this.$emit("change")
+        onBulkSelect({ selected }) {
+            const ids = this.rules.map(rule => rule.id)
+            const severity = selected ? 2 : 0
+            this.sendAction(selectRuleSeverity, ids, severity)
+        },
+
+        onItemSelect({ id, selected }) {
+            const severity = selected ? 2 : 0
+            this.sendAction(selectRuleSeverity, id, severity)
         },
     },
 }
