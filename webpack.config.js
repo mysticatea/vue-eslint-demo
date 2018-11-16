@@ -26,7 +26,22 @@ const VERSIONS = `export default ${JSON.stringify({
         repo: "babel/babel-eslint",
         version: require("babel-eslint/package.json").version,
     },
+    "typescript-eslint-parser": {
+        repo: "eslint/typescript-eslint-parser",
+        version: require("typescript-eslint-parser/package.json").version,
+    },
+    typescript: {
+        repo: "Microsoft/typescript",
+        version: require("typescript/package.json").version,
+    },
 })}`
+
+// Shim for vue-eslint-parser.
+const IMPORT_PARSER = `(
+    parserOptions.parser === "babel-eslint" ? require("babel-eslint") :
+    parserOptions.parser === "typescript-eslint-parser" ? require("typescript-eslint-parser") :
+    /* otherwise */ require("espree")
+)`
 
 module.exports = env => {
     const prod = Boolean(env && env.production)
@@ -136,8 +151,7 @@ module.exports = env => {
                             options: {
                                 search:
                                     'typeof parserOptions.parser === "string"\n        ? require(parserOptions.parser)\n        : require("espree")',
-                                replace:
-                                    '(parserOptions.parser === "babel-eslint" ? require("babel-eslint") : require("espree"))',
+                                replace: IMPORT_PARSER,
                             },
                         },
                     ],
@@ -172,6 +186,20 @@ module.exports = env => {
                             options: {
                                 search: "\\bglobal\\[",
                                 replace: "window[",
+                                flags: "g",
+                            },
+                        },
+                    ],
+                },
+                // Patch for `typescript`
+                {
+                    test: /node_modules[/\\]typescript[/\\]lib[/\\]typescript.js$/,
+                    use: [
+                        {
+                            loader: "string-replace-loader",
+                            options: {
+                                search: "require\\(.+?\\)",
+                                replace: "null",
                                 flags: "g",
                             },
                         },

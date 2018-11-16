@@ -43,7 +43,11 @@ export function deserializeState(serializedString) {
             if (json.indentType === "space" || json.indentType === "tab") {
                 state.indentType = json.indentType
             }
-            if (json.parser === "espree" || json.parser === "babel-eslint") {
+            if (
+                json.parser === "espree" ||
+                json.parser === "babel-eslint" ||
+                json.parser === "typescript-eslint-parser"
+            ) {
                 state.config.parserOptions.parser = json.parser
             }
         }

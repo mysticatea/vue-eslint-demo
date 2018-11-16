@@ -20,4 +20,12 @@ export default {
         repo: "babel/babel-eslint",
         version: "0.0.0",
     },
+    "typescript-eslint-parser": {
+        repo: "eslint/typescript-eslint-parser",
+        version: "0.0.0",
+    },
+    typescript: {
+        repo: "Microsoft/typescript",
+        version: "0.0.0",
+    },
 }

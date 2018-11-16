@@ -22,6 +22,11 @@ const PARSRES = Object.freeze([
         name: "babel-eslint",
         url: "https://github.com/babel/babel-eslint",
     }),
+    Object.freeze({
+        id: "typescript-eslint-parser",
+        name: "typescript-eslint-parser",
+        url: "https://github.com/eslint/typescript-eslint-parser",
+    }),
 ])
 
 export default {
